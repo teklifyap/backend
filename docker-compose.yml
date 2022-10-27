@@ -1,42 +1,15 @@
-version: '3.5'
-
+version: '2'
 services:
-  postgres:
-    container_name: postgres_container
-    image: postgres
-    environment:
-      POSTGRES_USER: "root"
-      POSTGRES_PASSWORD: "root"
-      POSTGRES_DB: "guessMusic"
-      PGDATA: /data/postgres
-    volumes:
-      - postgres:/data/postgres
-    ports:
-      - "5432:5432"
-    networks:
-      - postgres
+  api_dev:
+    container_name: teklifyap-api
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: always
-
-  pgadmin:
-    container_name: pgadmin_container
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "oguzhanercelik@gmail.com"
-      PGADMIN_DEFAULT_PASSWORD: "12345678"
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
     volumes:
-      - pgadmin:/var/lib/pgadmin
-
+      - storage_dev:/app/storage
     ports:
-      - "80:80"
-    networks:
-      - postgres
-    restart: always
-
-networks:
-  postgres:
-    driver: bridge
+      - "8080:8080"
 
 volumes:
-  postgres:
-  pgadmin:
+  storage_dev:
