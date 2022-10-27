@@ -8,7 +8,7 @@ WORKDIR /app
 # Copy app files
 COPY . .
 
-RUN mvn clean install -f ./pom.xml
+RUN mvn clean install
 
 RUN ls ./target
 EXPOSE 8080

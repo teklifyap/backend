@@ -1,6 +1,6 @@
 version: '2'
 services:
-  api_dev:
+  api:
     container_name: teklifyap-api
     build:
       context: .
