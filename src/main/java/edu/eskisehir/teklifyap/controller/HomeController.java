@@ -1,4 +1,4 @@
-package edu.eskisehir.guessMusic.controller;
+package edu.eskisehir.teklifyap.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
