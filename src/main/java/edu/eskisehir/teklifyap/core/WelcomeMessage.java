@@ -1,4 +1,4 @@
-package edu.eskisehir.teklifyap.domain;
+package edu.eskisehir.teklifyap.core;
 
 import lombok.Data;
 

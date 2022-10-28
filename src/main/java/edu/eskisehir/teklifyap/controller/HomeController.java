@@ -1,6 +1,6 @@
 package edu.eskisehir.teklifyap.controller;
 
-import edu.eskisehir.teklifyap.domain.WelcomeMessage;
+import edu.eskisehir.teklifyap.core.WelcomeMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
