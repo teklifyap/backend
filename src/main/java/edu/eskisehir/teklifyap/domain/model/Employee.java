@@ -3,10 +3,10 @@ package edu.eskisehir.teklifyap.domain.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "employee")
@@ -20,5 +20,16 @@ public class Employee {
     private Long id;
     private String name;
     private String surname;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToMany
+    @JoinTable(
+            name = "employee_worksite",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "worksite_id"))
+    private List<Worksite> worksites;
 
 }
