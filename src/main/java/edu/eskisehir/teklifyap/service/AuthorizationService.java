@@ -14,9 +14,14 @@ public class AuthorizationService {
     private final UserService userService;
     private final JwtTokenUtility jwtTokenUtility;
 
-    public Long getUserFromHttpRequest(HttpServletRequest request) {
+    public Long getUserIdFromHttpRequest(HttpServletRequest request) {
         final String token = request.getHeader("Authorization").substring(7);
         return userService.findByEmail(jwtTokenUtility.getUsernameFromToken(token)).getId();
+    }
+
+    public User getUserFromHttpRequest(HttpServletRequest request) {
+        final String token = request.getHeader("Authorization").substring(7);
+        return userService.findByEmail(jwtTokenUtility.getUsernameFromToken(token));
     }
 
 }
