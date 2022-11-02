@@ -36,6 +36,8 @@ public class User implements UserDetails {
     private LocalDateTime registrationDate;
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedDate;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Item> items;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
