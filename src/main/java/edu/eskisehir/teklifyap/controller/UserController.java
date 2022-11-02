@@ -29,7 +29,7 @@ public class UserController {
                                                                   @RequestParam(value = "user", required = false) String uid)
             throws Exception {
 
-        Long id = authorizationService.getUserFromHttpRequest(request);
+        Long id = authorizationService.getUserIdFromHttpRequest(request);
         return ResponseEntity.ok(new SuccessDataMessage<>(userService.getProfile(id), request.getServletPath()));
     }
 
