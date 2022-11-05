@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,4 +28,19 @@ public class Offer {
     private String receiverName;
     private String userName;
     private double profitRate;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "worksite_id")
+    private Worksite worksite;
+
+    @ManyToMany
+    @JoinTable(
+            name = "offer_item",
+            joinColumns = @JoinColumn(name = "offer_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id"))
+    private List<Item> items;
 }

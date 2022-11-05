@@ -4,6 +4,7 @@ import edu.eskisehir.teklifyap.domain.enums.Unit;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,4 +26,10 @@ public class Item {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToMany
+    @JoinTable(
+            name = "offer_item",
+            joinColumns = @JoinColumn(name = "item_id"),
+            inverseJoinColumns = @JoinColumn(name = "offer_id"))
+    private List<Offer> offers;
 }
