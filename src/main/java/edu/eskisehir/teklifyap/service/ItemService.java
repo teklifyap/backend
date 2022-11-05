@@ -5,8 +5,9 @@ import edu.eskisehir.teklifyap.domain.model.Item;
 import edu.eskisehir.teklifyap.domain.model.User;
 import edu.eskisehir.teklifyap.repository.ItemRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -40,5 +41,24 @@ public class ItemService {
                 .name(itemDto.getName())
                 .build();
         return itemRepository.save(item);
+    }
+
+    public String getItems(User user) {
+        return null;
+    }
+
+    public void deleteItem(Long id, User user) {
+        itemRepository.deleteById(id);
+    }
+
+    public void updateItem(ItemDto itemDto, User user) {
+        Item item = itemRepository.findById(itemDto.getId()).orElseThrow();
+        item.setName(itemDto.getName());
+        item.setValue(itemDto.getValue());
+        itemRepository.save(item);
+    }
+
+    public String getItem(Long id, User user) {
+        return null;
     }
 }
