@@ -32,7 +32,7 @@ public class EmployeeController {
     @GetMapping
     public ResponseEntity<SuccessMessage> getEmployees(HttpServletRequest request) {
         User user = authorizationService.getUserFromHttpRequest(request);
-        return ResponseEntity.ok(new SuccessMessage(employeeService.getEmployees(user), request.getServletPath()));
+        return ResponseEntity.ok(new SuccessMessage(employeeService.getEmployees(), request.getServletPath()));
     }
 
     @DeleteMapping("/{id}")
