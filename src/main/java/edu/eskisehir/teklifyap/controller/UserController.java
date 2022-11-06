@@ -25,9 +25,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<SuccessDataMessage<UserDto>> getProfile(HttpServletRequest request,
-                                                                  @RequestParam(value = "user", required = false) String uid)
-            throws Exception {
+    public ResponseEntity<SuccessDataMessage<UserDto>> getProfile(HttpServletRequest request) throws Exception {
 
         Long id = authorizationService.getUserIdFromHttpRequest(request);
         return ResponseEntity.ok(new SuccessDataMessage<>(userService.getProfile(id), request.getServletPath()));
