@@ -44,7 +44,11 @@ public class ItemService {
     }
 
     public String getItems(User user) {
-        return null;
+        return itemRepository.findAll().stream().map(item -> ItemDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .value(item.getValue())
+                .build()).toList().toString();
     }
 
     public void deleteItem(Long id, User user) {
@@ -59,6 +63,11 @@ public class ItemService {
     }
 
     public String getItem(Long id, User user) {
-        return null;
+        return itemRepository.findById(id).map(item -> ItemDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .value(item.getValue())
+                .build()).toString();
     }
+
 }
