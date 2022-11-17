@@ -1,10 +1,12 @@
 package edu.eskisehir.teklifyap.domain.model;
 
 import edu.eskisehir.teklifyap.domain.enums.Unit;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Setter
@@ -12,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "item")
 @Entity
-@Builder
 public class Item {
 
     @Id
@@ -26,10 +27,4 @@ public class Item {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany
-    @JoinTable(
-            name = "offer_item",
-            joinColumns = @JoinColumn(name = "item_id"),
-            inverseJoinColumns = @JoinColumn(name = "offer_id"))
-    private List<Offer> offers;
 }

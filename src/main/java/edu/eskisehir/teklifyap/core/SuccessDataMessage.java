@@ -1,9 +1,6 @@
 package edu.eskisehir.teklifyap.core;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 @Data

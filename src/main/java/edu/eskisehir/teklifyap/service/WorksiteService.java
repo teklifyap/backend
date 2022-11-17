@@ -8,30 +8,28 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class WorksiteService {
+
     WorksiteRepository worksiteRepository;
 
     public WorksiteService(WorksiteRepository worksiteRepository) {
         this.worksiteRepository = worksiteRepository;
     }
 
+    public WorksiteService() {
+    }
+
     public void createWorksite(WorksiteDto worksiteDto, User user) {
-        Worksite worksite = Worksite.builder()
-                .name(worksiteDto.getName())
-                .address(worksiteDto.getAddress())
-                .locationX(worksiteDto.getLocationX())
-                .locationY(worksiteDto.getLocationY())
-                .build();
-        worksite=worksiteRepository.save(worksite);
+//        Worksite worksite = Worksite.builder()
+//                .name(worksiteDto.getName())
+//                .address(worksiteDto.getAddress())
+//                .locationX(worksiteDto.getLocationX())
+//                .locationY(worksiteDto.getLocationY())
+//                .build();
+//        worksite=worksiteRepository.save(worksite);
     }
 
     public String getWorksites(User user) {
-        return worksiteRepository.findAll().stream().map(worksite -> WorksiteDto.builder()
-                .id(worksite.getId())
-                .name(worksite.getName())
-                .address(worksite.getAddress())
-                .locationX(worksite.getLocationX())
-                .locationY(worksite.getLocationY())
-                .build()).toList().toString();
+        return null;
     }
 
     public void deleteWorksite(Long id, User user) {
@@ -49,12 +47,6 @@ public class WorksiteService {
     }
 
     public String getWorksite(Long id, User user) {
-        return worksiteRepository.findById(id).map(worksite -> WorksiteDto.builder()
-                .id(worksite.getId())
-                .name(worksite.getName())
-                .address(worksite.getAddress())
-                .locationX(worksite.getLocationX())
-                .locationY(worksite.getLocationY())
-                .build()).toString();
+        return null;
     }
 }

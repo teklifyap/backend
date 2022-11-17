@@ -14,12 +14,10 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
 @Entity
-@Builder
 public class User implements UserDetails {
 
     @Id
@@ -38,12 +36,15 @@ public class User implements UserDetails {
     private LocalDateTime updatedDate;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Item> items;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Offer> offers;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Employee> employees;
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -75,16 +76,4 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        User user = (User) o;
-        return id != null && Objects.equals(id, user.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

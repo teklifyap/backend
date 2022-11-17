@@ -1,28 +1,52 @@
 package edu.eskisehir.teklifyap.service;
 
+import edu.eskisehir.teklifyap.domain.dto.MakeOfferDto;
 import edu.eskisehir.teklifyap.domain.dto.OfferDto;
+import edu.eskisehir.teklifyap.domain.model.Offer;
 import edu.eskisehir.teklifyap.domain.model.User;
+import edu.eskisehir.teklifyap.repository.OfferRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class OfferService {
-    public void createOffer(OfferDto offerDto, User user) {
 
+    private OfferRepository offerRepository;
+
+    public OfferService(OfferRepository offerRepository) {
+        this.offerRepository = offerRepository;
     }
 
-    public String getOffers(User user) {
+    public OfferService() {
+    }
+
+    public List<OfferDto> getOffers(User user) {
+
         return null;
     }
 
-    public void deleteOffer(Long id, User user) {
+    public void deleteOffer(Long uid) {
 
     }
 
-    public void updateOffer(OfferDto offerDto, User user) {
+    public OfferDto updateOffer(OfferDto offerDto) {
 
-    }
-
-    public String getOffer(Long id, User user) {
         return null;
     }
+
+    public OfferDto getOffer(User user) {
+
+        return null;
+    }
+
+    public OfferDto save(Offer offer) {
+        return null;
+    }
+
+    public void makeOffer(MakeOfferDto makeOfferDto, User user) {
+
+
+    }
+
 }

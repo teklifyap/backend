@@ -1,7 +1,9 @@
 package edu.eskisehir.teklifyap.controller;
 
+import edu.eskisehir.teklifyap.core.SuccessDataMessage;
 import edu.eskisehir.teklifyap.core.SuccessMessage;
 import edu.eskisehir.teklifyap.domain.dto.ItemDto;
+import edu.eskisehir.teklifyap.domain.dto.ItemNameDto;
 import edu.eskisehir.teklifyap.domain.model.User;
 import edu.eskisehir.teklifyap.service.AuthorizationService;
 import edu.eskisehir.teklifyap.service.ItemService;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/item")
@@ -32,36 +35,37 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<SuccessMessage> getItems(HttpServletRequest request) {
+    public ResponseEntity<SuccessDataMessage<List<ItemNameDto>>> getItems(HttpServletRequest request) {
 
         User user = authorizationService.getUserFromHttpRequest(request);
 
-        return ResponseEntity.ok(new SuccessMessage(itemService.getItems(user), request.getServletPath()));
+        return ResponseEntity.ok(new SuccessDataMessage<>(itemService.getItems(user), request.getServletPath()));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<SuccessMessage> deleteItem(HttpServletRequest request, @PathVariable Long id) {
 
-        User user = authorizationService.getUserFromHttpRequest(request);
+        authorizationService.getUserFromHttpRequest(request);
 
-        itemService.deleteItem(id, user);
+        itemService.deleteItem(id);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SuccessMessage> updateItem(HttpServletRequest request, @RequestBody ItemDto itemDto) {
+    public ResponseEntity<SuccessMessage> updateItem(HttpServletRequest request, @RequestBody ItemDto itemDto) throws Exception {
 
-        User user = authorizationService.getUserFromHttpRequest(request);
+        authorizationService.getUserFromHttpRequest(request);
 
-        itemService.updateItem(itemDto, user);
+        itemService.updateItem(itemDto);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SuccessMessage> getItem(HttpServletRequest request, @PathVariable Long id) {
+    public ResponseEntity<SuccessDataMessage<ItemDto>> getItem(HttpServletRequest request, @PathVariable Long id) throws Exception {
 
-        User user = authorizationService.getUserFromHttpRequest(request);
+        authorizationService.getUserFromHttpRequest(request);
 
-        return ResponseEntity.ok(new SuccessMessage(itemService.getItem(id, user), request.getServletPath()));
+        return ResponseEntity.ok(new SuccessDataMessage<>(itemService.getItem(id), request.getServletPath()));
     }
+
 }

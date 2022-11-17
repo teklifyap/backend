@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "employee")
 @Entity
-@Builder
 public class Employee {
 
     @Id
@@ -20,11 +19,9 @@ public class Employee {
     private Long id;
     private String name;
     private String surname;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
     @ManyToMany
     @JoinTable(
             name = "employee_worksite",
