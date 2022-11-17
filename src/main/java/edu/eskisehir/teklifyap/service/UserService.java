@@ -2,18 +2,23 @@ package edu.eskisehir.teklifyap.service;
 
 import edu.eskisehir.teklifyap.domain.dto.UserDto;
 import edu.eskisehir.teklifyap.domain.model.User;
+import edu.eskisehir.teklifyap.mapper.UserMapper;
 import edu.eskisehir.teklifyap.repository.UserRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
+
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
 
     protected User findById(long id) throws Exception {
         return userRepository.findById(id).orElseThrow(() -> new Exception("UserNotFound"));
@@ -33,12 +38,8 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDto getProfile(Long uid) throws Exception {
+
         User user = findById(uid);
-        return UserDto.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .surname(user.getSurname())
-                .email(user.getEmail())
-                .build();
+        return userMapper.toUserDto(user);
     }
 }

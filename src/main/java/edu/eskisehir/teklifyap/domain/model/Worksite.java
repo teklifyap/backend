@@ -1,6 +1,9 @@
 package edu.eskisehir.teklifyap.domain.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "worksite")
 @Entity
-@Builder
 public class Worksite {
 
     @Id
@@ -22,11 +24,9 @@ public class Worksite {
     private String address;
     private double locationX;
     private double locationY;
-
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "offer_id")
     private Offer offer;
-
     @ManyToMany
     @JoinTable(
             name = "employee_worksite",

@@ -5,7 +5,6 @@ import edu.eskisehir.teklifyap.core.SuccessMessage;
 import edu.eskisehir.teklifyap.domain.dto.LoginDto;
 import edu.eskisehir.teklifyap.domain.dto.RegisterDto;
 import edu.eskisehir.teklifyap.service.AuthService;
-import edu.eskisehir.teklifyap.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

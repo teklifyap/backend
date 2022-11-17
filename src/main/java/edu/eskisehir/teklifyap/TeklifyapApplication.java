@@ -10,7 +10,6 @@ public class TeklifyapApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TeklifyapApplication.class, args);
-		System.out.println("Merhaba ben osman");
 		log.info("Application is just started now!");
 	}
 
