@@ -3,6 +3,7 @@ package edu.eskisehir.teklifyap.controller;
 import edu.eskisehir.teklifyap.core.SuccessDataMessage;
 import edu.eskisehir.teklifyap.core.SuccessMessage;
 import edu.eskisehir.teklifyap.domain.dto.ItemDto;
+import edu.eskisehir.teklifyap.domain.dto.ItemNameDto;
 import edu.eskisehir.teklifyap.domain.model.User;
 import edu.eskisehir.teklifyap.service.AuthorizationService;
 import edu.eskisehir.teklifyap.service.ItemService;
@@ -34,7 +35,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<SuccessDataMessage<List<ItemDto>>> getItems(HttpServletRequest request) {
+    public ResponseEntity<SuccessDataMessage<List<ItemNameDto>>> getItems(HttpServletRequest request) {
 
         User user = authorizationService.getUserFromHttpRequest(request);
 
@@ -44,7 +45,7 @@ public class ItemController {
     @DeleteMapping("/{id}")
     public ResponseEntity<SuccessMessage> deleteItem(HttpServletRequest request, @PathVariable Long id) {
 
-        User user = authorizationService.getUserFromHttpRequest(request);
+        authorizationService.getUserFromHttpRequest(request);
 
         itemService.deleteItem(id);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
@@ -66,4 +67,5 @@ public class ItemController {
 
         return ResponseEntity.ok(new SuccessDataMessage<>(itemService.getItem(id), request.getServletPath()));
     }
+
 }

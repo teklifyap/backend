@@ -7,12 +7,11 @@ import edu.eskisehir.teklifyap.domain.dto.RegisterDto;
 import edu.eskisehir.teklifyap.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 
 @RestController
 @AllArgsConstructor
@@ -22,14 +21,20 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(HttpServletRequest request, @RequestBody RegisterDto body) {
+    public ResponseEntity<?> register(HttpServletRequest request, @RequestBody RegisterDto body) throws MessagingException, UnsupportedEncodingException {
         authService.register(body);
         return ResponseEntity.ok(new SuccessMessage("Kayıt başarılı", request.getServletPath()));
     }
 
     @PostMapping
     public ResponseEntity<?> login(HttpServletRequest request, @RequestBody LoginDto body) throws Exception {
-
         return ResponseEntity.ok(new SuccessDataMessage<>(authService.login(body), request.getServletPath()));
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<?> verify(HttpServletRequest request, @RequestParam String token, @RequestParam("email") String email)
+            throws Exception {
+        authService.verify(token, email);
+        return ResponseEntity.ok(new SuccessMessage("Hesabınız onaylandı", request.getServletPath()));
     }
 }

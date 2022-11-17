@@ -14,5 +14,4 @@ public interface UserMapper {
 
     User regiterDtoToUser(RegisterDto registerDto);
 
-
 }
