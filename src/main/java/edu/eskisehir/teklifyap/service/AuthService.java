@@ -2,19 +2,26 @@ package edu.eskisehir.teklifyap.service;
 
 import edu.eskisehir.teklifyap.config.security.JwtTokenUtility;
 import edu.eskisehir.teklifyap.config.security.PasswordEncoder;
+import edu.eskisehir.teklifyap.core.Singleton;
 import edu.eskisehir.teklifyap.domain.dto.LoginDto;
 import edu.eskisehir.teklifyap.domain.dto.RegisterDto;
+import edu.eskisehir.teklifyap.domain.model.Token;
 import edu.eskisehir.teklifyap.domain.model.User;
 import edu.eskisehir.teklifyap.mapper.UserMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Service
+@AllArgsConstructor
 public class AuthService {
 
     private final UserService userService;
@@ -22,17 +29,10 @@ public class AuthService {
     private final JwtTokenUtility jwtTokenUtility;
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
+    private final MailService mailService;
+    private final TokenService tokenService;
 
-    public AuthService(UserService userService, PasswordEncoder passwordEncoder, JwtTokenUtility jwtTokenUtility,
-                       AuthenticationManager authenticationManager, UserMapper userMapper) {
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtTokenUtility = jwtTokenUtility;
-        this.authenticationManager = authenticationManager;
-        this.userMapper = userMapper;
-    }
-
-    public void register(RegisterDto body) {
+    public void register(RegisterDto body) throws MessagingException, UnsupportedEncodingException {
 
         User user = userMapper.regiterDtoToUser(body);
         user.setRegistrationDate(LocalDateTime.now());
@@ -40,7 +40,22 @@ public class AuthService {
         user.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(user.getPassword()));
         userService.save(user);
 
-        // send mail to confirm
+        sendMailToConfirm(user);
+
+    }
+
+    public void sendMailToConfirm(User user) throws MessagingException, UnsupportedEncodingException {
+
+        String token = Singleton.generateRandomString(20) + System.currentTimeMillis() % 1000000;
+
+        Token tokenObj = new Token();
+        tokenObj.setToken(token);
+        tokenObj.setEmail(user.getEmail());
+        tokenService.save(tokenObj);
+
+        Map<String, String> content = Map.of("name", user.getName() + " " + user.getSurname(),
+                "link", "http://78.135.83.71:8080//auth/verify?token=" + token + "&email=" + user.getEmail());
+        mailService.sendMail(user.getEmail(), "teklifyap'a hoşgeldin!", "mail-confirmation", content);
 
     }
 
@@ -54,5 +69,21 @@ public class AuthService {
             throw new Exception("BadCredentialsException");
         }
         return jwtTokenUtility.generateToken(userService.findByEmail(body.getEmail()), false);
+    }
+
+    public void verify(String token, String email) throws Exception {
+
+            Token tokenObj = tokenService.findByTokenAndEmail(token, email);
+            if (tokenObj == null) {
+                throw new Exception("TokenNotFound");
+            }
+            if (!tokenObj.getEmail().equals(email)) {
+                throw new Exception("TokenNotMatch");
+            }
+            User user = userService.findByEmail(email);
+            user.setConfirmed(true);
+            userService.save(user);
+            tokenService.delete(tokenObj);
+
     }
 }

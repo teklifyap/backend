@@ -1,8 +1,10 @@
 package edu.eskisehir.teklifyap.service;
 
 import edu.eskisehir.teklifyap.domain.dto.ItemDto;
+import edu.eskisehir.teklifyap.domain.dto.ItemNameDto;
 import edu.eskisehir.teklifyap.domain.model.Item;
 import edu.eskisehir.teklifyap.domain.model.User;
+import edu.eskisehir.teklifyap.mapper.ItemMapper;
 import edu.eskisehir.teklifyap.repository.ItemRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,24 +16,24 @@ import java.util.List;
 public class ItemService {
 
     private final ItemRepository itemRepository;
+    private final ItemMapper itemMapper;
 
-    public ItemService(ItemRepository itemRepository) {
+    public ItemService(ItemRepository itemRepository, ItemMapper itemMapper) {
         this.itemRepository = itemRepository;
+        this.itemMapper = itemMapper;
     }
 
     public ItemDto createItem(ItemDto itemDto, User user) {
 
-//        Item item = itemMappeer.toItem(itemDto);
-//        item.setUser(user);
-//        item = itemRepository.save(item);
-//        return itemMappeer.toItemDto(item);
-        return null;
+        Item item = itemMapper.toItem(itemDto);
+        item.setUser(user);
+        item = itemRepository.save(item);
+        return itemMapper.toItemDto(item);
     }
 
-    public List<ItemDto> getItems(User user) {
+    public List<ItemNameDto> getItems(User user) {
         List<Item> all = itemRepository.findAllByUserId(user.getId());
-//        return itemMappeer.toItemDto(all);
-        return null;
+        return itemMapper.toItemNameDto(all);
     }
 
     public void deleteItem(Long id) {
@@ -44,8 +46,7 @@ public class ItemService {
         item.setName(itemDto.getName());
         item.setValue(itemDto.getValue());
         Item save = save(item);
-//        return itemMappeer.toItemDto(save);
-        return null;
+        return itemMapper.toItemDto(save);
     }
 
     protected Item save(Item item) {
@@ -54,8 +55,7 @@ public class ItemService {
 
     public ItemDto getItem(Long id) throws Exception {
         Item item = itemRepository.findById(id).orElseThrow(() -> new Exception("ItemNotFound!"));
-//        return itemMappeer.toItemDto(item);
-        return null;
+        return itemMapper.toItemDto(item);
     }
 
 }
