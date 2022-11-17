@@ -21,53 +21,41 @@ public class ItemService {
 
     public ItemDto createItem(ItemDto itemDto, User user) {
 
-        Item item = Item.builder()
-                .value(itemDto.getValue())
-                .name(itemDto.getName())
-                .unit(itemDto.getUnit())
-                .user(user)
-                .build();
-        item = itemRepository.save(item);
-        return ItemDto.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .value(item.getValue())
-                .build();
+//        Item item = itemMappeer.toItem(itemDto);
+//        item.setUser(user);
+//        item = itemRepository.save(item);
+//        return itemMappeer.toItemDto(item);
+        return null;
     }
 
-    protected Item create(ItemDto itemDto) {
-        Item item = Item.builder()
-                .value(itemDto.getValue())
-                .name(itemDto.getName())
-                .build();
-        return itemRepository.save(item);
+    public List<ItemDto> getItems(User user) {
+        List<Item> all = itemRepository.findAllByUserId(user.getId());
+//        return itemMappeer.toItemDto(all);
+        return null;
     }
 
-    public String getItems(User user) {
-        return itemRepository.findAll().stream().map(item -> ItemDto.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .value(item.getValue())
-                .build()).toList().toString();
-    }
-
-    public void deleteItem(Long id, User user) {
+    public void deleteItem(Long id) {
         itemRepository.deleteById(id);
     }
 
-    public void updateItem(ItemDto itemDto, User user) {
-        Item item = itemRepository.findById(itemDto.getId()).orElseThrow();
+    public ItemDto updateItem(ItemDto itemDto) throws Exception {
+
+        Item item = itemRepository.findById(itemDto.getId()).orElseThrow(() -> new Exception("ItemNotFound!"));
         item.setName(itemDto.getName());
         item.setValue(itemDto.getValue());
-        itemRepository.save(item);
+        Item save = save(item);
+//        return itemMappeer.toItemDto(save);
+        return null;
     }
 
-    public String getItem(Long id, User user) {
-        return itemRepository.findById(id).map(item -> ItemDto.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .value(item.getValue())
-                .build()).toString();
+    protected Item save(Item item) {
+        return itemRepository.save(item);
+    }
+
+    public ItemDto getItem(Long id) throws Exception {
+        Item item = itemRepository.findById(id).orElseThrow(() -> new Exception("ItemNotFound!"));
+//        return itemMappeer.toItemDto(item);
+        return null;
     }
 
 }

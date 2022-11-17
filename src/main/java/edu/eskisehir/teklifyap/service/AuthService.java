@@ -5,7 +5,7 @@ import edu.eskisehir.teklifyap.config.security.PasswordEncoder;
 import edu.eskisehir.teklifyap.domain.dto.LoginDto;
 import edu.eskisehir.teklifyap.domain.dto.RegisterDto;
 import edu.eskisehir.teklifyap.domain.model.User;
-import lombok.AllArgsConstructor;
+import edu.eskisehir.teklifyap.mapper.UserMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -15,29 +15,32 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
-@AllArgsConstructor
 public class AuthService {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtility jwtTokenUtility;
     private final AuthenticationManager authenticationManager;
+    private final UserMapper userMapper;
+
+    public AuthService(UserService userService, PasswordEncoder passwordEncoder, JwtTokenUtility jwtTokenUtility,
+                       AuthenticationManager authenticationManager, UserMapper userMapper) {
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenUtility = jwtTokenUtility;
+        this.authenticationManager = authenticationManager;
+        this.userMapper = userMapper;
+    }
 
     public void register(RegisterDto body) {
 
-        User user = User.builder()
-                .name(body.getName())
-                .surname(body.getSurname())
-                .email(body.getEmail())
-                .confirmed(false)
-                .password(passwordEncoder.bCryptPasswordEncoder().encode(body.getPassword()))
-                .registrationDate(LocalDateTime.now())
-                .updatedDate(LocalDateTime.now())
-                .build();
-
+        User user = userMapper.regiterDtoToUser(body);
+        user.setRegistrationDate(LocalDateTime.now());
+        user.setUpdatedDate(LocalDateTime.now());
+        user.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(user.getPassword()));
         userService.save(user);
 
-        // send mail tyo confirm
+        // send mail to confirm
 
     }
 
