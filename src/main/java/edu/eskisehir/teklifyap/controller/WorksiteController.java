@@ -22,7 +22,6 @@ public class WorksiteController {
         this.authorizationService = authorizationService;
     }
 
-
     @PostMapping
     public ResponseEntity<SuccessMessage> createWorksite(HttpServletRequest request, @RequestBody WorksiteDto worksiteDto) {
         User user = authorizationService.getUserFromHttpRequest(request);

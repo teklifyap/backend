@@ -19,23 +19,11 @@ public class EmployeeService {
     }
 
     public EmployeeDto createEmployee(EmployeeDto employeeDto, User user) {
-        Employee employee = Employee.builder()
-                .name(employeeDto.getName())
-                .surname(employeeDto.getSurname())
-                .user(user)
-                .build();
-        return EmployeeDto.builder()
-                .id(employeeRepository.save(employee).getId())
-                .name(employee.getName())
-                .surname(employee.getSurname())
-                .build();
+        return null;
     }
+
     public String getEmployees() {
-        return employeeRepository.findAll().stream().map(employee -> EmployeeDto.builder()
-                .id(employee.getId())
-                .name(employee.getName())
-                .surname(employee.getSurname())
-                .build()).toList().toString();
+        return null;
     }
 
     public void deleteEmployee(Long id, User user) {
@@ -43,18 +31,10 @@ public class EmployeeService {
     }
 
     public void updateEmployee(EmployeeDto employeeDto, User user) {
-    employeeRepository.findById(employeeDto.getId()).ifPresent(employee -> {
-        employee.setName(employeeDto.getName());
-        employee.setSurname(employeeDto.getSurname());
-        employeeRepository.save(employee);
-    });
+
     }
 
     public String getEmployee(Long id, User user) {
-        return employeeRepository.findById(id).map(employee -> EmployeeDto.builder()
-                .id(employee.getId())
-                .name(employee.getName())
-                .surname(employee.getSurname())
-                .build()).toString();
+        return null;
     }
 }

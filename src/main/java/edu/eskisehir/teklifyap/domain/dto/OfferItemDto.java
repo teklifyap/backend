@@ -5,20 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OfferDto {
+public class OfferItemDto {
 
-    private Long id;
-    private LocalDateTime date;
-    private boolean status;
-    private String receiverName;
-    private double profitRate;
-
+    private Long oid;
     private List<ItemDto> items;
 
 }
