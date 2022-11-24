@@ -8,7 +8,6 @@ import edu.eskisehir.teklifyap.domain.dto.RegisterDto;
 import edu.eskisehir.teklifyap.domain.model.Token;
 import edu.eskisehir.teklifyap.domain.model.User;
 import edu.eskisehir.teklifyap.mapper.UserMapper;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,7 +21,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
-@AllArgsConstructor
 public class AuthService {
 
     @Value("${base.url}")
@@ -34,6 +32,18 @@ public class AuthService {
     private final UserMapper userMapper;
     private final MailService mailService;
     private final TokenService tokenService;
+
+    public AuthService(UserService userService, PasswordEncoder passwordEncoder, JwtTokenUtility jwtTokenUtility,
+                       AuthenticationManager authenticationManager, UserMapper userMapper,
+                       MailService mailService, TokenService tokenService) {
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenUtility = jwtTokenUtility;
+        this.authenticationManager = authenticationManager;
+        this.userMapper = userMapper;
+        this.mailService = mailService;
+        this.tokenService = tokenService;
+    }
 
     public void register(RegisterDto body) throws MessagingException, UnsupportedEncodingException {
 
