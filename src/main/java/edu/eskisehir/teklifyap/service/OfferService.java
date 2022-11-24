@@ -1,7 +1,7 @@
 package edu.eskisehir.teklifyap.service;
 
-import edu.eskisehir.teklifyap.domain.dto.MakeOfferDto;
-import edu.eskisehir.teklifyap.domain.dto.OfferDto;
+import edu.eskisehir.teklifyap.domain.dto.*;
+import edu.eskisehir.teklifyap.domain.model.Item;
 import edu.eskisehir.teklifyap.domain.model.Offer;
 import edu.eskisehir.teklifyap.domain.model.OfferItem;
 import edu.eskisehir.teklifyap.domain.model.User;
@@ -39,20 +39,20 @@ public class OfferService {
         offerRepository.deleteById(oid);
     }
 
-    public OfferDto updateOffer(Long id, OfferDto offerDto) throws Exception {
+    public OfferDto updateOffer(Long id, UpdateOfferDto body) throws Exception {
 
         Offer offer = findById(id);
 
-        if (offerDto.getUserName() != null) {
-            offer.setUserName(offerDto.getUserName());
+        if (body.getUserName() != null) {
+            offer.setUserName(body.getUserName());
         }
 
-        if (offerDto.getReceiverName() != null) {
-            offer.setReceiverName(offerDto.getReceiverName());
+        if (body.getReceiverName() != null) {
+            offer.setReceiverName(body.getReceiverName());
         }
 
-        if (offerDto.getProfitRate() != offer.getProfitRate() && offerDto.getProfitRate() != 0.0) {
-            offer.setProfitRate(offerDto.getProfitRate());
+        if (body.getProfitRate() != offer.getProfitRate() && body.getProfitRate() != 0.0) {
+            offer.setProfitRate(body.getProfitRate());
         }
 
         return offerMapper.toOfferDto(save(offer));
@@ -98,7 +98,40 @@ public class OfferService {
 
     public void updateOfferStatus(Long id) throws Exception {
         Offer offer = findById(id);
-        offer.setStatus(!offer.isStatus());
-        offerRepository.save(offer);
+        if (offer.getWorksite() != null) {
+            offer.setStatus(!offer.isStatus());
+            offerRepository.save(offer);
+        } else {
+            throw new Exception("Worksite is founded");
+        }
     }
+
+    public void addItemsToOffer(UpdateOfferItemDto body, Long offerId) throws Exception {
+
+        Offer offer = findById(offerId);
+
+        Item item = itemService.findById(body.getId());
+
+        for (int i = 0; i < offer.getOfferItems().size(); i++) {
+            if (offer.getOfferItems().get(i).getItem().getId().equals(item.getId())) {
+                throw new Exception("Item already exists in offer");
+            }
+        }
+
+        if (item.getValue() <= 0 || body.getQuantity() <= 0) {
+            throw new Exception("Quantity and value must be greater than 0");
+        }
+
+        OfferItem offerItem = new OfferItem();
+        offerItem.setOffer(offer);
+        offerItem.setItem(item);
+        offerItem.setQuantity(body.getQuantity());
+        offer.getOfferItems().add(offerItem);
+        save(offer);
+    }
+
+    public void deleteItemFromOffer(Long iid, Long oid) {
+        offerRepository.deleteOfferItem(iid, oid);
+    }
+
 }

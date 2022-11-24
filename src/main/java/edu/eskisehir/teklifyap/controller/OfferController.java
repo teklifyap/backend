@@ -2,9 +2,7 @@ package edu.eskisehir.teklifyap.controller;
 
 import edu.eskisehir.teklifyap.core.SuccessDataMessage;
 import edu.eskisehir.teklifyap.core.SuccessMessage;
-import edu.eskisehir.teklifyap.domain.dto.MakeOfferDto;
-import edu.eskisehir.teklifyap.domain.dto.OfferDto;
-import edu.eskisehir.teklifyap.domain.dto.OfferItemDto;
+import edu.eskisehir.teklifyap.domain.dto.*;
 import edu.eskisehir.teklifyap.domain.model.User;
 import edu.eskisehir.teklifyap.service.AuthorizationService;
 import edu.eskisehir.teklifyap.service.OfferService;
@@ -51,10 +49,10 @@ public class OfferController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SuccessMessage> updateOffer(HttpServletRequest request, @RequestBody OfferDto offerDto,
+    public ResponseEntity<SuccessMessage> updateOffer(HttpServletRequest request, @RequestBody UpdateOfferDto body,
                                                       @PathVariable Long id) throws Exception {
         authorizationService.getUserFromHttpRequest(request);
-        offerService.updateOffer(id, offerDto);
+        offerService.updateOffer(id, body);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 
@@ -65,21 +63,28 @@ public class OfferController {
     }
 
     @PutMapping("/status/{id}")
-    public ResponseEntity<SuccessMessage> updateOfferStatus(HttpServletRequest request, @PathVariable Long id) throws Exception {
+    public ResponseEntity<SuccessMessage> updateOfferStatus(HttpServletRequest request, @PathVariable Long id)
+            throws Exception {
         authorizationService.getUserFromHttpRequest(request);
         offerService.updateOfferStatus(id);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 
-    @PutMapping("/items")
-    public ResponseEntity<SuccessMessage> addItemsToOffer(HttpServletRequest request, @RequestBody OfferItemDto offerItemDto) {
+    @PostMapping("/item")
+    public ResponseEntity<SuccessMessage> addItemsToOffer(HttpServletRequest request, @RequestBody UpdateOfferItemDto body,
+                                                          @RequestParam("offer") Long offerId) throws Exception {
 
         authorizationService.getUserFromHttpRequest(request);
-//        offerService.updateOffer(OfferDto.builder()
-//                .id(offerItemDto.getOid())
-//                .items(offerItemDto.getItems())
-//                .build());
 
+        offerService.addItemsToOffer(body, offerId);
+        return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
+    }
+
+    @DeleteMapping("/item/{iid}")
+    public ResponseEntity<SuccessMessage> deleteItemFromOffer(HttpServletRequest request, @PathVariable Long iid,
+                                                              @RequestParam("offer") Long oid) {
+        authorizationService.getUserFromHttpRequest(request);
+        offerService.deleteItemFromOffer(iid, oid);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 
