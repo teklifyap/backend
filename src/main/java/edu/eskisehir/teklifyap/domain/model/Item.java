@@ -28,6 +28,8 @@ public class Item {
     private double value;
     private Unit unit;
 
+    private boolean deleted = false;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

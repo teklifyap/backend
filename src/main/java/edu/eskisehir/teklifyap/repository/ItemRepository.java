@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface ItemRepository extends CrudRepository<Item, Long> {
 
-    List<Item> findAllByUserId(Long id);
+    List<Item> findAllByUserIdAndDeletedFalse(Long id);
 
 }

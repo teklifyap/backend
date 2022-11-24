@@ -33,12 +33,14 @@ public class ItemService {
     }
 
     public List<ItemNameDto> getItems(User user) {
-        List<Item> all = itemRepository.findAllByUserId(user.getId());
+        List<Item> all = itemRepository.findAllByUserIdAndDeletedFalse(user.getId());
         return itemMapper.toItemNameDto(all);
     }
 
     public void deleteItem(Long id) {
-        itemRepository.deleteById(id);
+        Item item = findById(id);
+        item.setDeleted(true);
+        save(item);
     }
 
     public ItemDto updateItem(ItemDto itemDto, Long id) throws Exception {
