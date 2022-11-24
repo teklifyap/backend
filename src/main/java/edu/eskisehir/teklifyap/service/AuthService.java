@@ -5,9 +5,12 @@ import edu.eskisehir.teklifyap.config.security.PasswordEncoder;
 import edu.eskisehir.teklifyap.core.Singleton;
 import edu.eskisehir.teklifyap.domain.dto.LoginDto;
 import edu.eskisehir.teklifyap.domain.dto.RegisterDto;
+import edu.eskisehir.teklifyap.domain.model.Item;
 import edu.eskisehir.teklifyap.domain.model.Token;
 import edu.eskisehir.teklifyap.domain.model.User;
+import edu.eskisehir.teklifyap.mapper.ItemMapper;
 import edu.eskisehir.teklifyap.mapper.UserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,11 +21,15 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class AuthService {
 
+    @Autowired
+    private ItemMapper itemMapper;
     @Value("${base.url}")
     private String baseUrl;
     private final UserService userService;
@@ -54,7 +61,6 @@ public class AuthService {
         userService.save(user);
 
         sendMailToConfirm(user);
-
     }
 
     public void sendMailToConfirm(User user) throws MessagingException, UnsupportedEncodingException {
@@ -95,6 +101,21 @@ public class AuthService {
         }
         User user = userService.findByEmail(email);
         user.setConfirmed(true);
+
+        List<String> allLines = List.of("Beton (C25)-M3", "Beton (C30)-M3", "Kalıp İşçilik-M2", "Demir İşçilik-TON",
+                "İnşaat Demiri-TON", "Hasır Çelik-TON", "Hafriyat Kazı-M3", "Hafriyat Dolgu-M3", "Tuğla Duvar-M2",
+                "Kaba Sıva-M2", "Seramik Fayans Kaplama-M2", "Alçı Sıva-M2", "Beton İşçilik-M2");
+        List<Item> items = new LinkedList<>();
+        for (String line : allLines) {
+            String[] split = line.split("-");
+            Item item = new Item();
+            item.setName(split[0]);
+            item.setUnit(itemMapper.toUnit(split[1]));
+            item.setUser(user);
+            items.add(item);
+        }
+        user.setItems(items);
+
         userService.save(user);
         tokenService.delete(tokenObj);
 

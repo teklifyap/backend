@@ -3,6 +3,7 @@ package edu.eskisehir.teklifyap.mapper;
 import edu.eskisehir.teklifyap.domain.dto.ItemDto;
 import edu.eskisehir.teklifyap.domain.dto.ItemNameDto;
 import edu.eskisehir.teklifyap.domain.dto.MakeOfferItemsDto;
+import edu.eskisehir.teklifyap.domain.enums.Unit;
 import edu.eskisehir.teklifyap.domain.model.Item;
 import org.mapstruct.Mapper;
 
@@ -20,5 +21,9 @@ public interface ItemMapper {
     List<ItemDto> toItemDto(List<Item> item);
 
     List<ItemNameDto> toItemNameDto(List<Item> item);
+
+    default Unit toUnit(String unit){
+        return Unit.valueOf(unit);
+    }
 
 }
