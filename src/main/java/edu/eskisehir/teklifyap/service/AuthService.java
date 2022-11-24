@@ -9,6 +9,7 @@ import edu.eskisehir.teklifyap.domain.model.Token;
 import edu.eskisehir.teklifyap.domain.model.User;
 import edu.eskisehir.teklifyap.mapper.UserMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -24,6 +25,8 @@ import java.util.Map;
 @AllArgsConstructor
 public class AuthService {
 
+    @Value("${base.url}")
+    private String baseUrl;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtility jwtTokenUtility;
@@ -54,7 +57,7 @@ public class AuthService {
         tokenService.save(tokenObj);
 
         Map<String, String> content = Map.of("name", user.getName() + " " + user.getSurname(),
-                "link", "http://78.135.83.71:8080//auth/verify?token=" + token + "&email=" + user.getEmail());
+                "link", baseUrl + "/auth/verify?token=" + token + "&email=" + user.getEmail());
         mailService.sendMail(user.getEmail(), "teklifyap'a hoşgeldin!", "mail-confirmation", content);
 
     }
@@ -73,17 +76,17 @@ public class AuthService {
 
     public void verify(String token, String email) throws Exception {
 
-            Token tokenObj = tokenService.findByTokenAndEmail(token, email);
-            if (tokenObj == null) {
-                throw new Exception("TokenNotFound");
-            }
-            if (!tokenObj.getEmail().equals(email)) {
-                throw new Exception("TokenNotMatch");
-            }
-            User user = userService.findByEmail(email);
-            user.setConfirmed(true);
-            userService.save(user);
-            tokenService.delete(tokenObj);
+        Token tokenObj = tokenService.findByTokenAndEmail(token, email);
+        if (tokenObj == null) {
+            throw new Exception("TokenNotFound");
+        }
+        if (!tokenObj.getEmail().equals(email)) {
+            throw new Exception("TokenNotMatch");
+        }
+        User user = userService.findByEmail(email);
+        user.setConfirmed(true);
+        userService.save(user);
+        tokenService.delete(tokenObj);
 
     }
 }
