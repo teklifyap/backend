@@ -37,7 +37,7 @@ public class ItemService {
         return itemMapper.toItemNameDto(all);
     }
 
-    public void deleteItem(Long id) {
+    public void deleteItem(Long id) throws Exception {
         Item item = findById(id);
         item.setDeleted(true);
         save(item);
@@ -65,8 +65,8 @@ public class ItemService {
         return itemMapper.toItemDto(item);
     }
 
-    public Item findById(Long id) {
-        return itemRepository.findById(id).orElse(null);
+    public Item findById(Long id) throws Exception {
+        return itemRepository.findById(id).orElseThrow(() -> new Exception("Item not found"));
     }
 
 }

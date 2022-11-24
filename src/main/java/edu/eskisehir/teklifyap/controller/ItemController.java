@@ -43,7 +43,7 @@ public class ItemController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<SuccessMessage> deleteItem(HttpServletRequest request, @PathVariable Long id) {
+    public ResponseEntity<SuccessMessage> deleteItem(HttpServletRequest request, @PathVariable Long id) throws Exception {
 
         authorizationService.getUserFromHttpRequest(request);
 

@@ -53,7 +53,7 @@ public class OfferController {
     }
 
     @PostMapping
-    public ResponseEntity<SuccessMessage> makeOffer(HttpServletRequest request, @RequestBody MakeOfferDto makeOffer) {
+    public ResponseEntity<SuccessMessage> makeOffer(HttpServletRequest request, @RequestBody MakeOfferDto makeOffer) throws Exception {
 
         User user = authorizationService.getUserFromHttpRequest(request);
         offerService.makeOffer(makeOffer, user);
@@ -70,6 +70,13 @@ public class OfferController {
 //                .items(offerItemDto.getItems())
 //                .build());
 
+        return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
+    }
+
+    @PutMapping("/status/{id}")
+    public ResponseEntity<SuccessMessage> updateOfferStatus(HttpServletRequest request, @PathVariable Long id) throws Exception {
+        authorizationService.getUserFromHttpRequest(request);
+        offerService.updateOfferStatus(id);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 

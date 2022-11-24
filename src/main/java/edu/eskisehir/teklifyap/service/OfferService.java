@@ -2,29 +2,29 @@ package edu.eskisehir.teklifyap.service;
 
 import edu.eskisehir.teklifyap.domain.dto.MakeOfferDto;
 import edu.eskisehir.teklifyap.domain.dto.OfferDto;
-import edu.eskisehir.teklifyap.domain.model.Item;
 import edu.eskisehir.teklifyap.domain.model.Offer;
 import edu.eskisehir.teklifyap.domain.model.OfferItem;
 import edu.eskisehir.teklifyap.domain.model.User;
-import edu.eskisehir.teklifyap.mapper.ItemMapper;
 import edu.eskisehir.teklifyap.repository.OfferRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
 public class OfferService {
 
-    @Autowired
-    private ItemMapper itemMapper;
     private final OfferRepository offerRepository;
     private final ItemService itemService;
 
     public OfferService(OfferRepository offerRepository, ItemService itemService) {
         this.offerRepository = offerRepository;
         this.itemService = itemService;
+    }
+
+    public Offer findById(Long id) throws Exception {
+        return offerRepository.findById(id).orElseThrow(() -> new Exception("Offer not found"));
     }
 
     public List<OfferDto> getOffers(User user) {
@@ -50,7 +50,7 @@ public class OfferService {
         return null;
     }
 
-    public void makeOffer(MakeOfferDto makeOfferDto, User user) {
+    public void makeOffer(MakeOfferDto makeOfferDto, User user) throws Exception {
 
         Offer offer = new Offer();
         offer.setUser(user);
@@ -59,16 +59,22 @@ public class OfferService {
         offer.setProfitRate(makeOfferDto.getProfitRate());
         offer.setReceiverName(makeOfferDto.getReceiverName());
         offer.setDate(LocalDateTime.now());
-        offer.setOfferItems(makeOfferDto.getItems().stream().map(itemsDto -> {
+        offer.setOfferItems(new LinkedList<>());
+
+        for (int i = 0; i < makeOfferDto.getItems().size(); i++) {
             OfferItem offerItem = new OfferItem();
             offerItem.setOffer(offer);
-            offerItem.setQuantity(itemsDto.getQuantity());
-            Item item = itemService.findById(itemsDto.getId());
-            offerItem.setItem(item);
-            return offerItem;
-        }).toList());
+            offerItem.setItem(itemService.findById(makeOfferDto.getItems().get(i).getId()));
+            offerItem.setQuantity(makeOfferDto.getItems().get(i).getQuantity());
+            offer.getOfferItems().add(offerItem);
+        }
 
         offerRepository.save(offer);
     }
 
+    public void updateOfferStatus(Long id) throws Exception {
+        Offer offer = findById(id);
+        offer.setStatus(!offer.isStatus());
+        offerRepository.save(offer);
+    }
 }
