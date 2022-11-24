@@ -1,14 +1,13 @@
 package edu.eskisehir.teklifyap.controller;
 
 import edu.eskisehir.teklifyap.core.SuccessDataMessage;
+import edu.eskisehir.teklifyap.core.SuccessMessage;
+import edu.eskisehir.teklifyap.domain.dto.UpdateUserDto;
 import edu.eskisehir.teklifyap.domain.dto.UserDto;
 import edu.eskisehir.teklifyap.service.AuthorizationService;
 import edu.eskisehir.teklifyap.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +28,16 @@ public class UserController {
 
         Long id = authorizationService.getUserIdFromHttpRequest(request);
         return ResponseEntity.ok(new SuccessDataMessage<>(userService.getProfile(id), request.getServletPath()));
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<SuccessMessage> updateProfile(HttpServletRequest request, @RequestBody UpdateUserDto body)
+            throws Exception {
+
+        Long id = authorizationService.getUserIdFromHttpRequest(request);
+
+        userService.updateProfile(id, body);
+        return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 
 }

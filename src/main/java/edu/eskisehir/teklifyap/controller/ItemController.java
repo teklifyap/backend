@@ -52,16 +52,18 @@ public class ItemController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SuccessMessage> updateItem(HttpServletRequest request, @RequestBody ItemDto itemDto) throws Exception {
+    public ResponseEntity<SuccessMessage> updateItem(HttpServletRequest request, @RequestBody ItemDto itemDto,
+                                                     @PathVariable Long id) throws Exception {
 
         authorizationService.getUserFromHttpRequest(request);
 
-        itemService.updateItem(itemDto);
+        itemService.updateItem(itemDto, id);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SuccessDataMessage<ItemDto>> getItem(HttpServletRequest request, @PathVariable Long id) throws Exception {
+    public ResponseEntity<SuccessDataMessage<ItemDto>> getItem(HttpServletRequest request, @PathVariable Long id)
+            throws Exception {
 
         authorizationService.getUserFromHttpRequest(request);
 

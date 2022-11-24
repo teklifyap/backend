@@ -41,11 +41,15 @@ public class ItemService {
         itemRepository.deleteById(id);
     }
 
-    public ItemDto updateItem(ItemDto itemDto) throws Exception {
+    public ItemDto updateItem(ItemDto itemDto, Long id) throws Exception {
 
-        Item item = itemRepository.findById(itemDto.getId()).orElseThrow(() -> new Exception("ItemNotFound!"));
-        item.setName(itemDto.getName());
-        item.setValue(itemDto.getValue());
+        Item item = itemRepository.findById(id).orElseThrow(() -> new Exception("ItemNotFound!"));
+        if (itemDto.getName() != null) {
+            item.setName(itemDto.getName());
+        }
+        if (itemDto.getValue() != item.getValue()) {
+            item.setValue(itemDto.getValue());
+        }
         Item save = save(item);
         return itemMapper.toItemDto(save);
     }

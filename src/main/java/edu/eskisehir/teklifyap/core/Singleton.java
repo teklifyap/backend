@@ -50,4 +50,18 @@ public class Singleton {
         return response + (Instant.now().toEpochMilli() % 1000000000);
     }
 
+    public static boolean validateEmail(String email) {
+        String regex = "^(.+)@(.+)$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    public static boolean validatePass(String pass) {
+        String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(pass);
+        return matcher.matches();
+    }
+
 }
