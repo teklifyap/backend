@@ -30,7 +30,7 @@ public class Item {
 
     private boolean deleted = false;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 

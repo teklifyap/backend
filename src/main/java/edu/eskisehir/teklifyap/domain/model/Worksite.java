@@ -24,10 +24,12 @@ public class Worksite {
     private String address;
     private double locationX;
     private double locationY;
-    @OneToOne(cascade=CascadeType.ALL)
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "offer_id")
     private Offer offer;
-    @ManyToMany
+
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "employee_worksite",
             joinColumns = @JoinColumn(name = "worksite_id"),

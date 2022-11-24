@@ -18,13 +18,13 @@ public class OfferItem {
     private OfferItemId offerItemId = new OfferItemId();
     private int quantity;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @MapsId("offerId")
     @JoinColumn(name = "offer_id")
     @JsonIgnore
     private Offer offer;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @MapsId("itemId")
     @JoinColumn(name = "item_id")
     @JsonIgnore

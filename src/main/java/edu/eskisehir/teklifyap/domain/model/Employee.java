@@ -19,10 +19,10 @@ public class Employee {
     private Long id;
     private String name;
     private String surname;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "employee_worksite",
             joinColumns = @JoinColumn(name = "employee_id"),
