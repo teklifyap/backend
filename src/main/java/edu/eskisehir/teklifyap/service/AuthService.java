@@ -93,12 +93,7 @@ public class AuthService {
     public void verify(String token, String email) throws Exception {
 
         Token tokenObj = tokenService.findByTokenAndEmail(token, email);
-        if (tokenObj == null) {
-            throw new Exception("TokenNotFound");
-        }
-        if (!tokenObj.getEmail().equals(email)) {
-            throw new Exception("TokenNotMatch");
-        }
+
         User user = userService.findByEmail(email);
         user.setConfirmed(true);
 
@@ -120,5 +115,19 @@ public class AuthService {
         userService.save(user);
         tokenService.delete(tokenObj);
 
+    }
+
+    public void sendAccountDeleteMail(User user) throws MessagingException, UnsupportedEncodingException {
+
+        String token = Singleton.generateRandomString(20) + System.currentTimeMillis() % 1000000;
+
+        Token tokenObj = new Token();
+        tokenObj.setToken(token);
+        tokenObj.setEmail(user.getEmail());
+        tokenService.save(tokenObj);
+
+        String link = baseUrl + "/auth/delete-me?token=" + token + "&email=" + user.getEmail();
+        Map<String,String> content = Map.of("name", user.getName(), "link", link);
+        mailService.sendMail(user.getEmail(), "Hesap silme", "delete-account", content);
     }
 }

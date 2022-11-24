@@ -4,6 +4,7 @@ import edu.eskisehir.teklifyap.config.security.PasswordEncoder;
 import edu.eskisehir.teklifyap.core.Singleton;
 import edu.eskisehir.teklifyap.domain.dto.UpdateUserDto;
 import edu.eskisehir.teklifyap.domain.dto.UserDto;
+import edu.eskisehir.teklifyap.domain.model.Token;
 import edu.eskisehir.teklifyap.domain.model.User;
 import edu.eskisehir.teklifyap.mapper.UserMapper;
 import edu.eskisehir.teklifyap.repository.UserRepository;
@@ -20,11 +21,14 @@ public class UserService implements UserDetailsService {
     private UserMapper userMapper;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder,
+                       TokenService tokenService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+        this.tokenService = tokenService;
     }
 
     protected User findById(long id) throws Exception {
@@ -68,4 +72,12 @@ public class UserService implements UserDetailsService {
             throw new Exception("PasswordNotMatch");
         }
     }
+
+    public void deleteUser(String email, String token) throws Exception {
+        Token optional = tokenService.findByTokenAndEmail(token, email);
+        User user = findByEmail(email);
+        userRepository.delete(user);
+        tokenService.delete(optional);
+    }
+
 }
