@@ -111,6 +111,7 @@ public class AuthService {
             Item item = new Item();
             item.setName(split[0]);
             item.setUnit(itemMapper.toUnit(split[1]));
+            item.setValue(0);
             item.setUser(user);
             items.add(item);
         }

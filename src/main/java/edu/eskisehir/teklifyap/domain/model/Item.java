@@ -25,7 +25,7 @@ public class Item {
     @Column(name = "id", nullable = false)
     private Long id;
     private String name;
-    private String value;
+    private double value;
     private Unit unit;
 
     @ManyToOne

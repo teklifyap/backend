@@ -12,7 +12,7 @@ public class ItemDto {
 
     private Long id;
     private String name;
-    private String value;
+    private double value;
     private Unit unit;
 
     private Double quantity;
