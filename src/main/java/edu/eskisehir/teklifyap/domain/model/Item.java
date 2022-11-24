@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -23,8 +27,12 @@ public class Item {
     private String name;
     private String value;
     private Unit unit;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<OfferItem> offerItems = new ArrayList<>();
 
 }
