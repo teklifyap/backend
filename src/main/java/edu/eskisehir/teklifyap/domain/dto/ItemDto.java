@@ -1,11 +1,10 @@
 package edu.eskisehir.teklifyap.domain.dto;
 
 import edu.eskisehir.teklifyap.domain.enums.Unit;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemDto {

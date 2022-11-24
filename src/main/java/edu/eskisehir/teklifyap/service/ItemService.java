@@ -26,8 +26,8 @@ public class ItemService {
 
     public ItemDto createItem(ItemDto itemDto, User user) {
 
-        Item item = itemMapper.toItem(itemDto);
-//        item.setUser(user);
+        Item item = itemMapper.toItem2(itemDto);
+        item.setUser(user);
         item = itemRepository.save(item);
         return itemMapper.toItemDto(item);
     }

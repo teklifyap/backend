@@ -12,9 +12,9 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ItemMapper {
 
-    Item toItem(ItemDto itemDto);
-
     Item toItem(MakeOfferItemsDto itemDto);
+
+    Item toItem2(ItemDto itemDto);
 
     ItemDto toItemDto(Item item);
 
