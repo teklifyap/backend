@@ -18,6 +18,7 @@ public interface OfferMapper {
         offerDto.setReceiverName(offer.getReceiverName());
         offerDto.setProfitRate(offer.getProfitRate());
         offerDto.setItems(new LinkedList<>());
+        offerDto.setUserName(offer.getUserName());
 
         offer.getOfferItems().forEach(offerItem -> {
             offerDto.getItems().add(new ItemDto(offerItem.getItem().getId(), offerItem.getItem().getName(),

@@ -16,6 +16,7 @@ public class OfferDto {
     private Long id;
     private LocalDateTime date;
     private boolean status;
+    private String userName;
     private String receiverName;
     private double profitRate;
 

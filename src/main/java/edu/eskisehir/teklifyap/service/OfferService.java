@@ -40,17 +40,31 @@ public class OfferService {
         offerRepository.deleteById(oid);
     }
 
-    public OfferDto updateOffer(OfferDto offerDto) {
+    public OfferDto updateOffer(Long id, OfferDto offerDto) throws Exception {
 
-        return null;
+        Offer offer = findById(id);
+
+        if (offerDto.getUserName() != null) {
+            offer.setUserName(offerDto.getUserName());
+        }
+
+        if (offerDto.getReceiverName() != null) {
+            offer.setReceiverName(offerDto.getReceiverName());
+        }
+
+        if (offerDto.getProfitRate() != offer.getProfitRate() && offerDto.getProfitRate() != 0.0) {
+            offer.setProfitRate(offerDto.getProfitRate());
+        }
+
+        return offerMapper.toOfferDto(save(offer));
     }
 
     public OfferDto getOffer(Long id) throws Exception {
         return offerMapper.toOfferDto(findById(id));
     }
 
-    public OfferDto save(Offer offer) {
-        return null;
+    public Offer save(Offer offer) {
+        return offerRepository.save(offer);
     }
 
     public void makeOffer(MakeOfferDto makeOfferDto, User user) throws Exception {
@@ -58,9 +72,13 @@ public class OfferService {
         Offer offer = new Offer();
         offer.setUser(user);
         offer.setStatus(false);
-        offer.setUserName(user.getName());
-        offer.setProfitRate(makeOfferDto.getProfitRate());
+        if (makeOfferDto.getUserName() != null) {
+            offer.setUserName(makeOfferDto.getUserName());
+        } else {
+            offer.setUserName(user.getName() + " " + user.getSurname());
+        }
         offer.setReceiverName(makeOfferDto.getReceiverName());
+        offer.setProfitRate(makeOfferDto.getProfitRate());
         offer.setDate(LocalDateTime.now());
         offer.setOfferItems(new LinkedList<>());
 
