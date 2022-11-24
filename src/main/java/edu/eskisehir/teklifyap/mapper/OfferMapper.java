@@ -6,6 +6,7 @@ import edu.eskisehir.teklifyap.domain.model.Offer;
 import org.mapstruct.Mapper;
 
 import java.util.LinkedList;
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface OfferMapper {
@@ -27,5 +28,7 @@ public interface OfferMapper {
 
         return offerDto;
     }
+
+    List<OfferDto> toOfferDtoList(List<Offer> allByUser);
 
 }

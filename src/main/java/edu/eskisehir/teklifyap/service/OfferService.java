@@ -32,8 +32,7 @@ public class OfferService {
     }
 
     public List<OfferDto> getOffers(User user) {
-
-        return null;
+        return offerMapper.toOfferDtoList(offerRepository.findAllByUser(user));
     }
 
     public void deleteOffer(Long oid) {
