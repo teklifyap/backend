@@ -1,12 +1,13 @@
 package edu.eskisehir.teklifyap.domain.model;
 
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.io.File;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "offers")
 @Entity
-public class Offer {
+public class Offer { // Students
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,16 +27,15 @@ public class Offer {
     private String receiverName;
     private String userName;
     private double profitRate;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "worksite_id")
     private Worksite worksite;
-    @ManyToMany
-    @JoinTable(
-            name = "offer_item",
-            joinColumns = @JoinColumn(name = "offer_id"),
-            inverseJoinColumns = @JoinColumn(name = "item_id"))
-    private List<Item> items;
+
+    @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL)
+    private List<OfferItem> offerItems = new ArrayList<>();
 }

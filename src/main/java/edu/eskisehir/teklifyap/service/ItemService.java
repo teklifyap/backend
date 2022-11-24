@@ -7,6 +7,7 @@ import edu.eskisehir.teklifyap.domain.model.User;
 import edu.eskisehir.teklifyap.mapper.ItemMapper;
 import edu.eskisehir.teklifyap.repository.ItemRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,18 +16,18 @@ import java.util.List;
 @Slf4j
 public class ItemService {
 
+    @Autowired
+    private ItemMapper itemMapper;
     private final ItemRepository itemRepository;
-    private final ItemMapper itemMapper;
 
-    public ItemService(ItemRepository itemRepository, ItemMapper itemMapper) {
+    public ItemService(ItemRepository itemRepository) {
         this.itemRepository = itemRepository;
-        this.itemMapper = itemMapper;
     }
 
     public ItemDto createItem(ItemDto itemDto, User user) {
 
         Item item = itemMapper.toItem(itemDto);
-        item.setUser(user);
+//        item.setUser(user);
         item = itemRepository.save(item);
         return itemMapper.toItemDto(item);
     }
@@ -56,6 +57,10 @@ public class ItemService {
     public ItemDto getItem(Long id) throws Exception {
         Item item = itemRepository.findById(id).orElseThrow(() -> new Exception("ItemNotFound!"));
         return itemMapper.toItemDto(item);
+    }
+
+    public Item findById(Long id) {
+        return itemRepository.findById(id).orElse(null);
     }
 
 }
