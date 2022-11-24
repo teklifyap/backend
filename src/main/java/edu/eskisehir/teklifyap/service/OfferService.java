@@ -31,8 +31,8 @@ public class OfferService {
         return offerRepository.findById(id).orElseThrow(() -> new Exception("Offer not found"));
     }
 
-    public List<OfferDto> getOffers(User user) {
-        return offerMapper.toOfferDtoList(offerRepository.findAllByUser(user));
+    public List<ShortOfferDto> getOffers(User user) {
+        return offerMapper.toShortOfferDtoList(offerRepository.findAllByUser(user));
     }
 
     public void deleteOffer(Long oid) {
@@ -53,6 +53,10 @@ public class OfferService {
 
         if (body.getProfitRate() != offer.getProfitRate() && body.getProfitRate() != 0.0) {
             offer.setProfitRate(body.getProfitRate());
+        }
+
+        if (body.getTitle() != null) {
+            offer.setTitle(body.getTitle());
         }
 
         return offerMapper.toOfferDto(save(offer));
@@ -76,6 +80,7 @@ public class OfferService {
         } else {
             offer.setUserName(user.getName() + " " + user.getSurname());
         }
+        offer.setTitle(makeOfferDto.getTitle());
         offer.setReceiverName(makeOfferDto.getReceiverName());
         offer.setProfitRate(makeOfferDto.getProfitRate());
         offer.setDate(LocalDateTime.now());

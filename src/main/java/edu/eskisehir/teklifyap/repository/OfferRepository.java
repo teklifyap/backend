@@ -13,6 +13,7 @@ import java.util.List;
 @Repository
 public interface OfferRepository extends CrudRepository<Offer, Long> {
 
+    @Query("SELECT new edu.eskisehir.teklifyap.domain.model.Offer(o.id, o.status, o.title) FROM Offer o WHERE o.user = ?1")
     List<Offer> findAllByUser(User user);
 
     @Modifying

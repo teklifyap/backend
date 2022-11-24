@@ -2,6 +2,7 @@ package edu.eskisehir.teklifyap.mapper;
 
 import edu.eskisehir.teklifyap.domain.dto.ItemDto;
 import edu.eskisehir.teklifyap.domain.dto.OfferDto;
+import edu.eskisehir.teklifyap.domain.dto.ShortOfferDto;
 import edu.eskisehir.teklifyap.domain.model.Offer;
 import org.mapstruct.Mapper;
 
@@ -14,6 +15,7 @@ public interface OfferMapper {
     default OfferDto toOfferDto(Offer offer) {
         OfferDto offerDto = new OfferDto();
         offerDto.setId(offer.getId());
+        offerDto.setTitle(offer.getTitle());
         offerDto.setDate(offer.getDate());
         offerDto.setStatus(offer.isStatus());
         offerDto.setReceiverName(offer.getReceiverName());
@@ -29,6 +31,6 @@ public interface OfferMapper {
         return offerDto;
     }
 
-    List<OfferDto> toOfferDtoList(List<Offer> allByUser);
+    List<ShortOfferDto> toShortOfferDtoList(List<Offer> allByUser);
 
 }

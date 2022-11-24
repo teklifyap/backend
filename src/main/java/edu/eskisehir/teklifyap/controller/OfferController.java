@@ -57,7 +57,7 @@ public class OfferController {
     }
 
     @GetMapping
-    public ResponseEntity<SuccessDataMessage<List<OfferDto>>> getOffers(HttpServletRequest request) {
+    public ResponseEntity<SuccessDataMessage<List<ShortOfferDto>>> getOffers(HttpServletRequest request) {
         User user = authorizationService.getUserFromHttpRequest(request);
         return ResponseEntity.ok(new SuccessDataMessage<>(offerService.getOffers(user), request.getServletPath()));
     }

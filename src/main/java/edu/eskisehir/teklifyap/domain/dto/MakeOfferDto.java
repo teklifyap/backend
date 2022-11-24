@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class MakeOfferDto {
 
+    private String title;
     private String receiverName;
     private String userName;
     private Double profitRate;

@@ -22,6 +22,7 @@ public class Offer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+    private String title;
     private LocalDateTime date;
     private boolean status;
     private String receiverName;
@@ -38,4 +39,10 @@ public class Offer {
 
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OfferItem> offerItems = new ArrayList<>();
+
+    public Offer(Long id, boolean status, String title) {
+        this.id = id;
+        this.status = status;
+        this.title = title;
+    }
 }

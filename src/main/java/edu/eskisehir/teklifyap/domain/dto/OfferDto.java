@@ -14,6 +14,7 @@ import java.util.List;
 public class OfferDto {
 
     private Long id;
+    private String title;
     private LocalDateTime date;
     private boolean status;
     private String userName;
