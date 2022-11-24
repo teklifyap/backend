@@ -26,10 +26,19 @@ public class OfferController {
         this.authorizationService = authorizationService;
     }
 
-    @GetMapping
-    public ResponseEntity<SuccessDataMessage<List<OfferDto>>> getOffers(HttpServletRequest request) {
+    @GetMapping("/{id}")
+    public ResponseEntity<SuccessDataMessage<OfferDto>> getOffer(HttpServletRequest request, @PathVariable Long id) throws Exception {
+        authorizationService.getUserFromHttpRequest(request);
+        return ResponseEntity.ok(new SuccessDataMessage<>(offerService.getOffer(id), request.getServletPath()));
+    }
+
+    @PostMapping
+    public ResponseEntity<SuccessMessage> makeOffer(HttpServletRequest request, @RequestBody MakeOfferDto makeOffer) throws Exception {
+
         User user = authorizationService.getUserFromHttpRequest(request);
-        return ResponseEntity.ok(new SuccessDataMessage<>(offerService.getOffers(user), request.getServletPath()));
+        offerService.makeOffer(makeOffer, user);
+
+        return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 
     @DeleteMapping("/{id}")
@@ -46,22 +55,20 @@ public class OfferController {
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<SuccessDataMessage<OfferDto>> getOffer(HttpServletRequest request, @PathVariable Long id) {
+    @GetMapping
+    public ResponseEntity<SuccessDataMessage<List<OfferDto>>> getOffers(HttpServletRequest request) {
         User user = authorizationService.getUserFromHttpRequest(request);
-        return ResponseEntity.ok(new SuccessDataMessage<>(offerService.getOffer(user), request.getServletPath()));
+        return ResponseEntity.ok(new SuccessDataMessage<>(offerService.getOffers(user), request.getServletPath()));
     }
 
-    @PostMapping
-    public ResponseEntity<SuccessMessage> makeOffer(HttpServletRequest request, @RequestBody MakeOfferDto makeOffer) throws Exception {
-
-        User user = authorizationService.getUserFromHttpRequest(request);
-        offerService.makeOffer(makeOffer, user);
-
+    @PutMapping("/status/{id}")
+    public ResponseEntity<SuccessMessage> updateOfferStatus(HttpServletRequest request, @PathVariable Long id) throws Exception {
+        authorizationService.getUserFromHttpRequest(request);
+        offerService.updateOfferStatus(id);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 
-    @PostMapping("/items")
+    @PutMapping("/items")
     public ResponseEntity<SuccessMessage> addItemsToOffer(HttpServletRequest request, @RequestBody OfferItemDto offerItemDto) {
 
         authorizationService.getUserFromHttpRequest(request);
@@ -70,13 +77,6 @@ public class OfferController {
 //                .items(offerItemDto.getItems())
 //                .build());
 
-        return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
-    }
-
-    @PutMapping("/status/{id}")
-    public ResponseEntity<SuccessMessage> updateOfferStatus(HttpServletRequest request, @PathVariable Long id) throws Exception {
-        authorizationService.getUserFromHttpRequest(request);
-        offerService.updateOfferStatus(id);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 

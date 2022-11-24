@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "offers")
 @Entity
-public class Offer { // Students
+public class Offer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class Offer { // Students
     private String userName;
     private double profitRate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -36,6 +36,6 @@ public class Offer { // Students
     @JoinColumn(name = "worksite_id")
     private Worksite worksite;
 
-    @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OfferItem> offerItems = new ArrayList<>();
 }

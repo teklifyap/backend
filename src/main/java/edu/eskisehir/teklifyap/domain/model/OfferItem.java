@@ -16,15 +16,15 @@ public class OfferItem {
 
     @EmbeddedId
     private OfferItemId offerItemId = new OfferItemId();
-    private int quantity;
+    private double quantity;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @MapsId("offerId")
     @JoinColumn(name = "offer_id")
     @JsonIgnore
     private Offer offer;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @MapsId("itemId")
     @JoinColumn(name = "item_id")
     @JsonIgnore

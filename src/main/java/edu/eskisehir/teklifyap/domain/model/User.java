@@ -36,7 +36,7 @@ public class User implements UserDetails {
     private LocalDateTime updatedDate;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Item> items;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<Offer> offers;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Employee> employees;

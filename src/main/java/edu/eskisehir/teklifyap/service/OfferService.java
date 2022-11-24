@@ -5,7 +5,9 @@ import edu.eskisehir.teklifyap.domain.dto.OfferDto;
 import edu.eskisehir.teklifyap.domain.model.Offer;
 import edu.eskisehir.teklifyap.domain.model.OfferItem;
 import edu.eskisehir.teklifyap.domain.model.User;
+import edu.eskisehir.teklifyap.mapper.OfferMapper;
 import edu.eskisehir.teklifyap.repository.OfferRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,6 +17,8 @@ import java.util.List;
 @Service
 public class OfferService {
 
+    @Autowired
+    private OfferMapper offerMapper;
     private final OfferRepository offerRepository;
     private final ItemService itemService;
 
@@ -32,8 +36,8 @@ public class OfferService {
         return null;
     }
 
-    public void deleteOffer(Long uid) {
-
+    public void deleteOffer(Long oid) {
+        offerRepository.deleteById(oid);
     }
 
     public OfferDto updateOffer(OfferDto offerDto) {
@@ -41,9 +45,8 @@ public class OfferService {
         return null;
     }
 
-    public OfferDto getOffer(User user) {
-
-        return null;
+    public OfferDto getOffer(Long id) throws Exception {
+        return offerMapper.toOfferDto(findById(id));
     }
 
     public OfferDto save(Offer offer) {
@@ -65,7 +68,11 @@ public class OfferService {
             OfferItem offerItem = new OfferItem();
             offerItem.setOffer(offer);
             offerItem.setItem(itemService.findById(makeOfferDto.getItems().get(i).getId()));
-            offerItem.setQuantity(makeOfferDto.getItems().get(i).getQuantity());
+            if (makeOfferDto.getItems().get(i).getQuantity() > 0 && offerItem.getItem().getValue() > 0) {
+                offerItem.setQuantity(makeOfferDto.getItems().get(i).getQuantity());
+            } else {
+                throw new Exception("Quantity and value must be greater than 0");
+            }
             offer.getOfferItems().add(offerItem);
         }
 
