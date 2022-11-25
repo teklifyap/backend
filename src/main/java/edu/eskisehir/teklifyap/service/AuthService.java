@@ -127,7 +127,8 @@ public class AuthService {
         tokenService.save(tokenObj);
 
         String link = baseUrl + "/auth/delete-me?token=" + token + "&email=" + user.getEmail();
-        Map<String,String> content = Map.of("name", user.getName(), "link", link);
+//        System.out.println(link.replace("https://teklifyap-api.oguzhanercelik.dev", "http://localhost:8080"));
+        Map<String, String> content = Map.of("name", user.getName(), "link", link);
         mailService.sendMail(user.getEmail(), "Hesap silme", "delete-account", content);
     }
 }

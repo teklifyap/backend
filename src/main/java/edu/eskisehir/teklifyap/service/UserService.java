@@ -76,7 +76,7 @@ public class UserService implements UserDetailsService {
     public void deleteUser(String email, String token) throws Exception {
         Token optional = tokenService.findByTokenAndEmail(token, email);
         User user = findByEmail(email);
-        userRepository.delete(user);
+        userRepository.deleteUser(user.getId());
         tokenService.delete(optional);
     }
 

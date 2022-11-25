@@ -2,6 +2,8 @@ package edu.eskisehir.teklifyap.domain.model;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,11 +36,14 @@ public class User implements UserDetails {
     private LocalDateTime registrationDate;
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedDate;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Item> items;
     @OneToMany(mappedBy = "user")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Offer> offers;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Employee> employees;
 
     @Override

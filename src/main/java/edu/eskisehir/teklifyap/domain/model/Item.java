@@ -30,11 +30,11 @@ public class Item {
 
     private boolean deleted = false;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "item")
     private List<OfferItem> offerItems = new ArrayList<>();
 
 }
