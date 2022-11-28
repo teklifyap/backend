@@ -6,6 +6,7 @@ import edu.eskisehir.teklifyap.domain.dto.*;
 import edu.eskisehir.teklifyap.domain.model.User;
 import edu.eskisehir.teklifyap.service.AuthorizationService;
 import edu.eskisehir.teklifyap.service.OfferService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -88,4 +89,11 @@ public class OfferController {
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 
+    @GetMapping("/export/{id}")
+    public ResponseEntity<byte[]> export(HttpServletRequest request, @PathVariable Long id) throws Exception {
+        byte[] export = offerService.export(id);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(export);
+    }
 }
