@@ -29,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping
-    public ResponseEntity<?> login(HttpServletRequest request, @RequestBody LoginDto body) throws Exception {
+    public ResponseEntity<SuccessDataMessage<String>> login(HttpServletRequest request, @RequestBody LoginDto body) throws Exception {
         return ResponseEntity.ok(new SuccessDataMessage<>(authService.login(body), request.getServletPath()));
     }
 

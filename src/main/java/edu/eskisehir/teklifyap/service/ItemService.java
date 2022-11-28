@@ -60,6 +60,10 @@ public class ItemService {
         return itemRepository.save(item);
     }
 
+    protected List<Item> saveAll(List<Item> items) {
+        return (List<Item>) itemRepository.saveAll(items);
+    }
+
     public ItemDto getItem(Long id) throws Exception {
         Item item = itemRepository.findById(id).orElseThrow(() -> new Exception("ItemNotFound!"));
         return itemMapper.toItemDto(item);

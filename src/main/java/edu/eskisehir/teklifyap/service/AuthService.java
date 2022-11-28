@@ -39,10 +39,11 @@ public class AuthService {
     private final UserMapper userMapper;
     private final MailService mailService;
     private final TokenService tokenService;
+    private final ItemService itemService;
 
     public AuthService(UserService userService, PasswordEncoder passwordEncoder, JwtTokenUtility jwtTokenUtility,
                        AuthenticationManager authenticationManager, UserMapper userMapper,
-                       MailService mailService, TokenService tokenService) {
+                       MailService mailService, TokenService tokenService, ItemService itemService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenUtility = jwtTokenUtility;
@@ -50,6 +51,7 @@ public class AuthService {
         this.userMapper = userMapper;
         this.mailService = mailService;
         this.tokenService = tokenService;
+        this.itemService = itemService;
     }
 
     public void register(RegisterDto body) throws MessagingException, UnsupportedEncodingException {
@@ -110,11 +112,10 @@ public class AuthService {
             item.setUser(user);
             items.add(item);
         }
-        user.setItems(items);
 
+        itemService.saveAll(items);
         userService.save(user);
         tokenService.delete(tokenObj);
-
     }
 
     public void sendAccountDeleteMail(User user) throws MessagingException, UnsupportedEncodingException {
