@@ -23,7 +23,8 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(HttpServletRequest request, @RequestBody RegisterDto body) throws MessagingException, UnsupportedEncodingException {
+    public ResponseEntity<SuccessMessage> register(HttpServletRequest request, @RequestBody RegisterDto body)
+            throws MessagingException, UnsupportedEncodingException {
         authService.register(body);
         return ResponseEntity.ok(new SuccessMessage("Kayıt başarılı", request.getServletPath()));
     }
@@ -34,8 +35,8 @@ public class AuthController {
     }
 
     @GetMapping("/verify")
-    public ResponseEntity<?> verify(HttpServletRequest request, @RequestParam String token, @RequestParam("email") String email)
-            throws Exception {
+    public ResponseEntity<SuccessMessage> verify(HttpServletRequest request, @RequestParam String token,
+                                                 @RequestParam("email") String email) throws Exception {
         authService.verify(token, email);
         return ResponseEntity.ok(new SuccessMessage("Hesabınız onaylandı", request.getServletPath()));
     }
