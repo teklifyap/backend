@@ -30,5 +30,7 @@ public class Employee {
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "worksite_id"))
     private List<Worksite> worksites;
-
+    private boolean deleted = false;
+    private double salary;
 }
+

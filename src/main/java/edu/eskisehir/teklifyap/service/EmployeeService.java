@@ -1,10 +1,12 @@
 package edu.eskisehir.teklifyap.service;
 
 import edu.eskisehir.teklifyap.domain.dto.EmployeeDto;
+import edu.eskisehir.teklifyap.domain.dto.EmployeeNameDto;
 import edu.eskisehir.teklifyap.domain.model.Employee;
 import edu.eskisehir.teklifyap.domain.model.User;
+import edu.eskisehir.teklifyap.mapper.EmployeeMapper;
 import edu.eskisehir.teklifyap.repository.EmployeeRepository;
-import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,28 +15,48 @@ import java.util.List;
 public class EmployeeService {
 
     EmployeeRepository employeeRepository;
+    @Autowired
+    EmployeeMapper employeeMapper;
 
     public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
 
     public EmployeeDto createEmployee(EmployeeDto employeeDto, User user) {
-        return null;
+        Employee employee = employeeMapper.toEmployee(employeeDto);
+        employee.setUser(user);
+        employee = employeeRepository.save(employee);
+        return employeeMapper.toEmployeeDto(employee);
     }
 
-    public String getEmployees() {
-        return null;
+    public List<EmployeeNameDto> getEmployees(User user) {
+        List<Employee> all = employeeRepository.findAllByUserIdAndDeletedFalse(user.getId());
+        return employeeMapper.toEmployeeNameDto(all);
     }
 
-    public void deleteEmployee(Long id, User user) {
-        employeeRepository.deleteById(id);
+    public void deleteEmployee(Long id) throws Exception {
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new Exception("EmployeeNotFound!"));
+        employee.setDeleted(true);
+        save(employee);
     }
 
-    public void updateEmployee(EmployeeDto employeeDto, User user) {
-
+    public EmployeeDto updateEmployee(EmployeeDto employeeDto, Long id) throws Exception {
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new Exception("EmployeeNotFound!"));
+        if (employeeDto.getName() != null) {
+            employee.setName(employeeDto.getName());
+        }
+        if (employeeDto.getSalary() != employee.getSalary()) {
+            employee.setSalary(employeeDto.getSalary());
+        }
+        employeeRepository.save(employee);
+        return employeeMapper.toEmployeeDto(employee);
     }
 
-    public String getEmployee(Long id, User user) {
-        return null;
+    protected Employee save(Employee employee) {
+        return employeeRepository.save(employee);
+    }
+
+    public EmployeeDto getEmployee(Long id) throws Exception {
+        return employeeRepository.findById(id).map(employeeMapper::toEmployeeDto).orElseThrow(() -> new Exception("EmployeeNotFound!"));
     }
 }
