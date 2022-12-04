@@ -42,10 +42,14 @@ public class EmployeeService {
 
     public EmployeeDto updateEmployee(EmployeeDto employeeDto, Long id) throws Exception {
         Employee employee = employeeRepository.findById(id).orElseThrow(() -> new Exception("EmployeeNotFound!"));
+        System.out.println(employeeDto.toString());
         if (employeeDto.getName() != null) {
             employee.setName(employeeDto.getName());
         }
-        if (employeeDto.getSalary() != employee.getSalary()) {
+        if (employeeDto.getSurname() != null) {
+            employee.setSurname(employeeDto.getSurname());
+        }
+        if (employeeDto.getSalary() != employee.getSalary() && employeeDto.getSalary() != 0) {
             employee.setSalary(employeeDto.getSalary());
         }
         employeeRepository.save(employee);
