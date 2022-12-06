@@ -43,15 +43,16 @@ public class WorksiteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SuccessMessage> updateWorksite(HttpServletRequest request, @RequestBody WorksiteDto worksiteDto) {
-        User user = authorizationService.getUserFromHttpRequest(request);
-        worksiteService.updateWorksite(worksiteDto, user);
+    public ResponseEntity<SuccessMessage> updateWorksite(HttpServletRequest request, @RequestBody WorksiteDto worksiteDto,@PathVariable Long id) {
+
+        authorizationService.getUserFromHttpRequest(request);
+        worksiteService.updateWorksite(id, worksiteDto);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<SuccessMessage> getWorksite(HttpServletRequest request, @PathVariable Long id) {
-        User user = authorizationService.getUserFromHttpRequest(request);
-        return ResponseEntity.ok(new SuccessMessage(worksiteService.getWorksite(id, user), request.getServletPath()));
+        authorizationService.getUserFromHttpRequest(request);
+        return ResponseEntity.ok(new SuccessMessage(worksiteService.getWorksite(id), request.getServletPath()));
     }
 }

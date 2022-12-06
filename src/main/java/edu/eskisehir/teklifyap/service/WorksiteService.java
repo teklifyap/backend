@@ -2,7 +2,6 @@ package edu.eskisehir.teklifyap.service;
 
 import edu.eskisehir.teklifyap.domain.dto.WorksiteDto;
 import edu.eskisehir.teklifyap.domain.model.User;
-import edu.eskisehir.teklifyap.domain.model.Worksite;
 import edu.eskisehir.teklifyap.repository.WorksiteRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +12,6 @@ public class WorksiteService {
 
     public WorksiteService(WorksiteRepository worksiteRepository) {
         this.worksiteRepository = worksiteRepository;
-    }
-
-    public WorksiteService() {
     }
 
     public void createWorksite(WorksiteDto worksiteDto, User user) {
@@ -36,17 +32,11 @@ public class WorksiteService {
         worksiteRepository.deleteById(id);
     }
 
-    public void updateWorksite(WorksiteDto worksiteDto, User user) {
-        worksiteRepository.findById(worksiteDto.getId()).ifPresent(worksite -> {
-            worksite.setName(worksiteDto.getName());
-            worksite.setAddress(worksiteDto.getAddress());
-            worksite.setLocationX(worksiteDto.getLocationX());
-            worksite.setLocationY(worksiteDto.getLocationY());
-            worksiteRepository.save(worksite);
-        });
+    public void updateWorksite(Long worksiteDto, WorksiteDto user) {
+
     }
 
-    public String getWorksite(Long id, User user) {
+    public String getWorksite(Long id) {
         return null;
     }
 }
