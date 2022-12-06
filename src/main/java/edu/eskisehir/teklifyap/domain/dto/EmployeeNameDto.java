@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class EmployeeNameDto {
 
-    private int no;
+    private Long id;
     private String name;
     private String surname;
 
