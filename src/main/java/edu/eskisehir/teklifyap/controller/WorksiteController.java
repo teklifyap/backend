@@ -3,6 +3,7 @@ package edu.eskisehir.teklifyap.controller;
 import edu.eskisehir.teklifyap.core.SuccessDataMessage;
 import edu.eskisehir.teklifyap.core.SuccessMessage;
 import edu.eskisehir.teklifyap.domain.dto.CreateWorksiteDto;
+import edu.eskisehir.teklifyap.domain.dto.UpdateWorksiteDto;
 import edu.eskisehir.teklifyap.domain.dto.WorksiteDto;
 import edu.eskisehir.teklifyap.domain.model.User;
 import edu.eskisehir.teklifyap.service.AuthorizationService;
@@ -41,32 +42,32 @@ public class WorksiteController {
     @DeleteMapping("/{id}")
     public ResponseEntity<SuccessMessage> deleteWorksite(HttpServletRequest request, @PathVariable Long id) {
         User user = authorizationService.getUserFromHttpRequest(request);
-        worksiteService.deleteWorksite(id, user);
+        worksiteService.deleteWorksite(id);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SuccessMessage> updateWorksite(HttpServletRequest request, @RequestBody WorksiteDto worksiteDto, @PathVariable Long id) {
+    public ResponseEntity<SuccessMessage> updateWorksite(HttpServletRequest request, @RequestBody UpdateWorksiteDto updateWorksiteDto, @PathVariable Long id) {
         authorizationService.getUserFromHttpRequest(request);
-        worksiteService.updateWorksite(id, worksiteDto);
+        worksiteService.updateWorksite(id, updateWorksiteDto);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SuccessDataMessage<WorksiteDto>> getWorksite(HttpServletRequest request, @PathVariable Long id) {
+    public ResponseEntity<SuccessDataMessage<WorksiteDto>> getWorksite(HttpServletRequest request, @PathVariable Long id) throws Exception {
         authorizationService.getUserFromHttpRequest(request);
         return ResponseEntity.ok(new SuccessDataMessage<>(worksiteService.getWorksite(id), request.getServletPath()));
     }
 
     @PostMapping("/{id}/employee")
-    public ResponseEntity<SuccessMessage> addEmployee(HttpServletRequest request, @PathVariable Long id, @RequestBody Long employeeId) {
+    public ResponseEntity<SuccessMessage> addEmployee(HttpServletRequest request, @PathVariable Long id, @RequestBody Long employeeId) throws Exception {
         User user = authorizationService.getUserFromHttpRequest(request);
         worksiteService.addEmployee(id, employeeId, user);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 
     @DeleteMapping("/{id}/employee/{employeeId}")
-    public ResponseEntity<SuccessMessage> deleteEmployee(HttpServletRequest request, @PathVariable Long id, @PathVariable Long employeeId) {
+    public ResponseEntity<SuccessMessage> deleteEmployee(HttpServletRequest request, @PathVariable Long id, @PathVariable Long employeeId) throws Exception {
         User user = authorizationService.getUserFromHttpRequest(request);
         worksiteService.removeEmployee(id, employeeId, user);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));

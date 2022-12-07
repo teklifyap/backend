@@ -3,6 +3,7 @@ package edu.eskisehir.teklifyap.mapper;
 import edu.eskisehir.teklifyap.domain.dto.ItemDto;
 import edu.eskisehir.teklifyap.domain.dto.OfferDto;
 import edu.eskisehir.teklifyap.domain.dto.ShortOfferDto;
+import edu.eskisehir.teklifyap.domain.dto.UpdateOfferDto;
 import edu.eskisehir.teklifyap.domain.model.Offer;
 import org.mapstruct.Mapper;
 
@@ -32,5 +33,9 @@ public interface OfferMapper {
     }
 
     List<ShortOfferDto> toShortOfferDtoList(List<Offer> allByUser);
+
+    Offer toOffer(UpdateOfferDto body);
+
+    UpdateOfferDto toUpdateOfferDto(Offer offer);
 
 }

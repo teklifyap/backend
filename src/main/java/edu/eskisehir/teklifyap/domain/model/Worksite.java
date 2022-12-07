@@ -8,7 +8,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -29,7 +28,6 @@ public class Worksite {
     private double locationX;
     private double locationY;
     private String userName;
-    private String offerName;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "offer_id")
