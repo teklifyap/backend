@@ -36,6 +36,9 @@ public class User implements UserDetails {
     private LocalDateTime registrationDate;
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedDate;
+
+    @OneToMany(mappedBy = "user")
+    private List<Worksite> worksites;
     @OneToMany(mappedBy = "user")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Item> items;
