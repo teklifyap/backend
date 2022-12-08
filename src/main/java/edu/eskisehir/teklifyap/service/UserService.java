@@ -4,9 +4,11 @@ import edu.eskisehir.teklifyap.config.security.PasswordEncoder;
 import edu.eskisehir.teklifyap.core.Singleton;
 import edu.eskisehir.teklifyap.domain.dto.UpdateUserDto;
 import edu.eskisehir.teklifyap.domain.dto.UserDto;
+import edu.eskisehir.teklifyap.domain.model.PasswordResetToken;
 import edu.eskisehir.teklifyap.domain.model.Token;
 import edu.eskisehir.teklifyap.domain.model.User;
 import edu.eskisehir.teklifyap.mapper.UserMapper;
+import edu.eskisehir.teklifyap.repository.PasswordTokenRepository;
 import edu.eskisehir.teklifyap.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,13 +24,14 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
-
+    private final PasswordTokenRepository passwordTokenRepository;
     public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder,
-                       TokenService tokenService) {
+                       TokenService tokenService, PasswordTokenRepository passwordTokenRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.tokenService = tokenService;
+        this.passwordTokenRepository = passwordTokenRepository;
     }
 
     protected User findById(long id) throws Exception {
@@ -80,4 +83,13 @@ public class UserService implements UserDetailsService {
         tokenService.delete(optional);
     }
 
+
+    public void resetPassword(String email, String token) {
+        PasswordResetToken passwordResetToken = passwordTokenRepository.findByToken(token);
+        User user = findByEmail(email);
+        userRepository.save(user);
+        //TODO şifre değiştirme için body alınmadı, şifre değiştirme için body alınacak
+        //TODO şifre encode edilip save lenecek
+        passwordTokenRepository.delete(passwordResetToken);
+    }
 }
