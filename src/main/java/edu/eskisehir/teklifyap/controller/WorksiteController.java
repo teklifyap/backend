@@ -3,6 +3,7 @@ package edu.eskisehir.teklifyap.controller;
 import edu.eskisehir.teklifyap.core.SuccessDataMessage;
 import edu.eskisehir.teklifyap.core.SuccessMessage;
 import edu.eskisehir.teklifyap.domain.dto.CreateWorksiteDto;
+import edu.eskisehir.teklifyap.domain.dto.DetailedWorksiteDto;
 import edu.eskisehir.teklifyap.domain.dto.UpdateWorksiteDto;
 import edu.eskisehir.teklifyap.domain.dto.WorksiteDto;
 import edu.eskisehir.teklifyap.domain.model.User;
@@ -40,7 +41,7 @@ public class WorksiteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<SuccessMessage> deleteWorksite(HttpServletRequest request, @PathVariable Long id) {
+    public ResponseEntity<SuccessMessage> deleteWorksite(HttpServletRequest request, @PathVariable Long id) throws Exception {
         User user = authorizationService.getUserFromHttpRequest(request);
         worksiteService.deleteWorksite(id);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
@@ -54,13 +55,13 @@ public class WorksiteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SuccessDataMessage<WorksiteDto>> getWorksite(HttpServletRequest request, @PathVariable Long id) throws Exception {
+    public ResponseEntity<SuccessDataMessage<DetailedWorksiteDto>> getWorksite(HttpServletRequest request, @PathVariable Long id) throws Exception {
         authorizationService.getUserFromHttpRequest(request);
         return ResponseEntity.ok(new SuccessDataMessage<>(worksiteService.getWorksite(id), request.getServletPath()));
     }
 
-    @PostMapping("/{id}/employee")
-    public ResponseEntity<SuccessMessage> addEmployee(HttpServletRequest request, @PathVariable Long id, @RequestBody Long employeeId) throws Exception {
+    @PutMapping("/{id}/employee/{employeeId}")
+    public ResponseEntity<SuccessMessage> addEmployee(HttpServletRequest request, @PathVariable Long id, @PathVariable Long employeeId) throws Exception {
         User user = authorizationService.getUserFromHttpRequest(request);
         worksiteService.addEmployee(id, employeeId, user);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));

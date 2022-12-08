@@ -1,17 +1,13 @@
 package edu.eskisehir.teklifyap.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "worksite")
@@ -36,6 +32,17 @@ public class Worksite {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Worksite(Long id, String name, String address, LocalDateTime date, double locationX, double locationY, String userName, Offer offer) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.date = date;
+        this.locationX = locationX;
+        this.locationY = locationY;
+        this.userName = userName;
+        this.offer = offer;
+    }
 
     //@ManyToMany(cascade = CascadeType.ALL)
     //@JoinTable(

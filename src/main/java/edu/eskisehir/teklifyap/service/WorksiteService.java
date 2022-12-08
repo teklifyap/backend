@@ -1,6 +1,7 @@
 package edu.eskisehir.teklifyap.service;
 
 import edu.eskisehir.teklifyap.domain.dto.CreateWorksiteDto;
+import edu.eskisehir.teklifyap.domain.dto.DetailedWorksiteDto;
 import edu.eskisehir.teklifyap.domain.dto.UpdateWorksiteDto;
 import edu.eskisehir.teklifyap.domain.dto.WorksiteDto;
 import edu.eskisehir.teklifyap.domain.model.*;
@@ -53,10 +54,15 @@ public class WorksiteService {
     }
 
     public List<WorksiteDto> getWorksites(User user) {
+        List<Worksite> worksites = worksiteRepository.findAllByUser(user);
+        System.out.println(worksites.get(0).toString());
         return worksiteMapper.toWorksiteDtoList(worksiteRepository.findAllByUser(user));
     }
 
-    public void deleteWorksite(Long id) {
+    public void deleteWorksite(Long id) throws Exception {
+        Worksite worksite = worksiteRepository.findById(id).orElseThrow(() -> new Exception("Worksite not found!"));
+        offerService.findById(worksite.getOffer().getId()).setWorksite(null);
+        offerService.updateOffer(worksite.getOffer().getId(), offerMapper.toUpdateOfferDto(worksite.getOffer()));
         worksiteRepository.deleteById(id);
     }
 
@@ -78,9 +84,8 @@ public class WorksiteService {
         });
     }
 
-    public WorksiteDto getWorksite(Long id) throws Exception {
-
-        return worksiteMapper.toWorksiteDto(worksiteRepository.findById(id).orElseThrow(() -> new Exception("Worksite not found!")));
+    public DetailedWorksiteDto getWorksite(Long id) throws Exception {
+        return worksiteMapper.toDetailedWorksiteDto(worksiteRepository.findById(id).orElseThrow(() -> new Exception("Worksite not found!")));
     }
 
     public void addEmployee(Long id, Long employeeId, User user) throws Exception {
@@ -102,8 +107,7 @@ public class WorksiteService {
         if (worksite.getUser().getId() != user.getId()) {
             throw new Exception("You are not owner of this worksite!");
         }
-        Employee employee = employeeMapper.toEmployee(employeeService.getEmployee(employeeId));
-        worksite.getWorksiteEmployees().removeIf(worksiteEmployee -> worksiteEmployee.getEmployee().getId() == employee.getId());
-        worksiteRepository.save(worksite);
+
+        worksiteRepository.deleteEmployeeFromWorksite(id, employeeId);
     }
 }
