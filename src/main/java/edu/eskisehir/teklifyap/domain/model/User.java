@@ -39,14 +39,11 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Worksite> worksites;
-    @OneToMany(mappedBy = "user")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Item> items;
-    @OneToMany(mappedBy = "user")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Offer> offers;
-    @OneToMany(mappedBy = "user")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Employee> employees;
 
     @Override
