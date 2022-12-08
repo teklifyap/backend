@@ -37,6 +37,7 @@ public class Offer {
     @JoinColumn(name = "worksite_id")
     private Worksite worksite;
 
+
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OfferItem> offerItems = new ArrayList<>();
 

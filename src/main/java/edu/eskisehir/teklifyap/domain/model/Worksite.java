@@ -25,11 +25,11 @@ public class Worksite {
     private double locationY;
     private String userName;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "offer_id")
     private Offer offer;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -50,7 +50,7 @@ public class Worksite {
     //        joinColumns = @JoinColumn(name = "worksite_id"),
     //        inverseJoinColumns = @JoinColumn(name = "employee_id"))
     @OneToMany(mappedBy = "worksite", cascade = CascadeType.ALL)
-    private List<WorksiteEmployee> worksiteEmployees=new ArrayList<>();
+    private List<WorksiteEmployee> worksiteEmployees = new ArrayList<>();
 
     public Worksite(Long id, String name, String address) {
         this.id = id;

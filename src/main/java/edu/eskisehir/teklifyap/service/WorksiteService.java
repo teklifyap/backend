@@ -18,15 +18,16 @@ import java.util.List;
 @Service
 public class WorksiteService {
 
-    @Autowired
-    private WorksiteMapper worksiteMapper;
+    private final WorksiteMapper worksiteMapper;
     private final WorksiteRepository worksiteRepository;
     private final OfferMapper offerMapper;
     private final EmployeeService employeeService;
     private final OfferService offerService;
     private final EmployeeMapper employeeMapper;
 
-    public WorksiteService(WorksiteRepository worksiteRepository, OfferMapper offerMapper, EmployeeService employeeService, OfferService offerService, EmployeeMapper employeeMapper) {
+
+    public WorksiteService(WorksiteMapper worksiteMapper, WorksiteRepository worksiteRepository, OfferMapper offerMapper, EmployeeService employeeService, OfferService offerService, EmployeeMapper employeeMapper) {
+        this.worksiteMapper = worksiteMapper;
         this.worksiteRepository = worksiteRepository;
         this.offerMapper = offerMapper;
         this.employeeService = employeeService;
@@ -90,21 +91,29 @@ public class WorksiteService {
 
     public void addEmployee(Long id, Long employeeId, User user) throws Exception {
         Worksite worksite = worksiteRepository.findById(id).orElseThrow(() -> new Exception("Worksite not found!"));
-        if (worksite.getUser().getId() != user.getId()) {
+        if (!worksite.getUser().getId().equals(user.getId()))
             throw new Exception("You are not owner of this worksite!");
-        }
+
         Employee employee = employeeMapper.toEmployee(employeeService.getEmployee(employeeId));
+        if (employee.isDeleted())
+            throw new Exception("Employee is deleted!");
+
+        for (WorksiteEmployee employee1 : worksite.getWorksiteEmployees()) {
+            if (employee1.getEmployee().getId().equals(employee.getId()))
+                throw new Exception("Employee is already added!");
+        }
 
         WorksiteEmployee worksiteEmployee = new WorksiteEmployee();
         worksiteEmployee.setEmployee(employee);
         worksiteEmployee.setWorksite(worksite);
+
         worksite.getWorksiteEmployees().add(worksiteEmployee);
         worksiteRepository.save(worksite);
     }
 
     public void removeEmployee(Long id, Long employeeId, User user) throws Exception {
         Worksite worksite = worksiteRepository.findById(id).orElseThrow(() -> new Exception("Worksite not found!"));
-        if (worksite.getUser().getId() != user.getId()) {
+        if (!worksite.getUser().getId().equals(user.getId())) {
             throw new Exception("You are not owner of this worksite!");
         }
 

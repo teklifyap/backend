@@ -6,8 +6,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "employee")
@@ -17,8 +16,13 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
+    @EqualsAndHashCode.Include
     private Long id;
+
+    @EqualsAndHashCode.Include
     private String name;
+
+    @EqualsAndHashCode.Include
     private String surname;
 
     @ManyToOne

@@ -61,6 +61,6 @@ public class EmployeeService {
     }
 
     public EmployeeDto getEmployee(Long id) throws Exception {
-        return employeeRepository.findById(id).map(employeeMapper::toEmployeeDto).orElseThrow(() -> new Exception("EmployeeNotFound!"));
+        return employeeMapper.toEmployeeDto(employeeRepository.findByIdAndDeletedFalse(id));
     }
 }
