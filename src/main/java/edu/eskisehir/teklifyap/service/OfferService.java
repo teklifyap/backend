@@ -113,11 +113,18 @@ public class OfferService {
 
     public void updateOfferStatus(Long id) throws Exception {
         Offer offer = findById(id);
-        if (offer.getWorksite() != null) {
+        //if (offer.getWorksite() != null) {
+        //    offer.setStatus(!offer.isStatus());
+        //    offerRepository.save(offer);
+        //} else {
+        //    throw new Exception("Worksite is not founded");
+        //}
+        if (offer.getWorksite() == null) {
             offer.setStatus(!offer.isStatus());
             offerRepository.save(offer);
         } else {
-            throw new Exception("Worksite is founded");
+            offer.setStatus(!offer.isStatus());
+            offerRepository.save(offer);
         }
     }
 

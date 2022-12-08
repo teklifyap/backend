@@ -5,12 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class WorksiteDto {
-
+@NoArgsConstructor
+public class DetailedWorksiteDto {
     private Long id;
     private String name;
     private String userName;
@@ -19,5 +19,5 @@ public class WorksiteDto {
     private String address;
     private double locationX;
     private double locationY;
-
+    private List<EmployeeDto> employees;
 }

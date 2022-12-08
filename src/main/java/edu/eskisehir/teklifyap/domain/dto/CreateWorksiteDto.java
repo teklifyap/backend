@@ -4,20 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class WorksiteDto {
+@NoArgsConstructor
+public class CreateWorksiteDto {
 
-    private Long id;
     private String name;
     private String userName;
-    private LocalDateTime date;
-    private String offerName;
+    private Long offerId;
     private String address;
-    private double locationX;
-    private double locationY;
-
+    private Double locationX;
+    private Double locationY;
 }
