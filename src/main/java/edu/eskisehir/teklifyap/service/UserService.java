@@ -2,6 +2,7 @@ package edu.eskisehir.teklifyap.service;
 
 import edu.eskisehir.teklifyap.config.security.PasswordEncoder;
 import edu.eskisehir.teklifyap.core.Singleton;
+import edu.eskisehir.teklifyap.domain.dto.PasswordDto;
 import edu.eskisehir.teklifyap.domain.dto.UpdateUserDto;
 import edu.eskisehir.teklifyap.domain.dto.UserDto;
 import edu.eskisehir.teklifyap.domain.model.PasswordResetToken;
@@ -25,6 +26,7 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     private final PasswordTokenRepository passwordTokenRepository;
+
     public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder,
                        TokenService tokenService, PasswordTokenRepository passwordTokenRepository) {
         this.userRepository = userRepository;
@@ -84,12 +86,16 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public void resetPassword(String email, String token) {
-        PasswordResetToken passwordResetToken = passwordTokenRepository.findByToken(token);
+    public void resetPassword(String email, String token, PasswordDto passwordDto) throws Exception {
+        PasswordResetToken passwordResetToken = passwordTokenRepository.findByToken(token).orElseThrow(() -> new Exception("Link is invalid or broken"));
         User user = findByEmail(email);
-        userRepository.save(user);
-        //TODO şifre değiştirme için body alınmadı, şifre değiştirme için body alınacak
-        //TODO şifre encode edilip save lenecek
+        if (passwordDto.getPassword().equals(passwordDto.getPasswordConfirm())) {
+            user.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(passwordDto.getPassword()));
+            save(user);
+            passwordTokenRepository.delete(passwordResetToken);
+        } else {
+            throw new Exception("PasswordNotMatch");
+        }
         passwordTokenRepository.delete(passwordResetToken);
     }
 }
