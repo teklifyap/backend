@@ -9,10 +9,10 @@ import edu.eskisehir.teklifyap.mapper.EmployeeMapper;
 import edu.eskisehir.teklifyap.mapper.OfferMapper;
 import edu.eskisehir.teklifyap.mapper.WorksiteMapper;
 import edu.eskisehir.teklifyap.repository.WorksiteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -56,7 +56,9 @@ public class WorksiteService {
 
     public List<WorksiteDto> getWorksites(User user) {
         List<Worksite> worksites = worksiteRepository.findAllByUser(user);
-        System.out.println(worksites.get(0).toString());
+        if (worksites.isEmpty()) {
+            return new ArrayList<>();
+        }
         return worksiteMapper.toWorksiteDtoList(worksiteRepository.findAllByUser(user));
     }
 
