@@ -16,6 +16,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -51,5 +52,7 @@ public class MailService {
         log.info("sendMail(" + to + ") -> ( subject : " + subject + ", template : " + template + ", context : " + context);
 
     }
+
+
 
 }

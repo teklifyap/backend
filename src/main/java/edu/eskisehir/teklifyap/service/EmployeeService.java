@@ -9,7 +9,11 @@ import edu.eskisehir.teklifyap.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
 
 @Service
 public class EmployeeService {
@@ -23,8 +27,11 @@ public class EmployeeService {
     }
 
     public EmployeeDto createEmployee(EmployeeDto employeeDto, User user) {
+
         Employee employee = employeeMapper.toEmployee(employeeDto);
+
         employee.setUser(user);
+        employee.setSalaryStartDate(LocalDate.now());
         employee = employeeRepository.save(employee);
         return employeeMapper.toEmployeeDto(employee);
     }
@@ -51,6 +58,7 @@ public class EmployeeService {
         }
         if (employeeDto.getSalary() != employee.getSalary() && employeeDto.getSalary() != 0) {
             employee.setSalary(employeeDto.getSalary());
+            employee.setSalaryStartDate(LocalDate.now());
         }
         employeeRepository.save(employee);
         return employeeMapper.toEmployeeDto(employee);

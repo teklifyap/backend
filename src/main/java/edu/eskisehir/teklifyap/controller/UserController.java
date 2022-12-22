@@ -56,4 +56,14 @@ public class UserController {
         return ResponseEntity.ok(new SuccessMessage("Mail gönderildi", request.getServletPath()));
     }
 
+    @PostMapping("/resetPassword")
+    public ResponseEntity<SuccessMessage> resetPassword(HttpServletRequest request,
+                                                        @RequestParam("email") String userEmail) throws MessagingException, UnsupportedEncodingException {
+        User user = userService.findByEmail(userEmail);
+
+        authService.createPasswordResetTokenForUser(user);
+
+        return ResponseEntity.ok(new SuccessMessage("Şifre sıfırlama linki gönderildi", request.getServletPath()));
+    }
+
 }

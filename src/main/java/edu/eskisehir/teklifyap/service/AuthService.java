@@ -6,10 +6,12 @@ import edu.eskisehir.teklifyap.core.Singleton;
 import edu.eskisehir.teklifyap.domain.dto.LoginDto;
 import edu.eskisehir.teklifyap.domain.dto.RegisterDto;
 import edu.eskisehir.teklifyap.domain.model.Item;
+import edu.eskisehir.teklifyap.domain.model.PasswordResetToken;
 import edu.eskisehir.teklifyap.domain.model.Token;
 import edu.eskisehir.teklifyap.domain.model.User;
 import edu.eskisehir.teklifyap.mapper.ItemMapper;
 import edu.eskisehir.teklifyap.mapper.UserMapper;
+import edu.eskisehir.teklifyap.repository.PasswordTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,9 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class AuthService {
@@ -40,10 +40,11 @@ public class AuthService {
     private final MailService mailService;
     private final TokenService tokenService;
     private final ItemService itemService;
+    private final PasswordTokenRepository passwordTokenRepository;
 
     public AuthService(UserService userService, PasswordEncoder passwordEncoder, JwtTokenUtility jwtTokenUtility,
                        AuthenticationManager authenticationManager, UserMapper userMapper,
-                       MailService mailService, TokenService tokenService, ItemService itemService) {
+                       MailService mailService, TokenService tokenService, ItemService itemService, PasswordTokenRepository passwordTokenRepository) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenUtility = jwtTokenUtility;
@@ -52,6 +53,7 @@ public class AuthService {
         this.mailService = mailService;
         this.tokenService = tokenService;
         this.itemService = itemService;
+        this.passwordTokenRepository = passwordTokenRepository;
     }
 
     public void register(RegisterDto body) throws MessagingException, UnsupportedEncodingException {
@@ -132,4 +134,71 @@ public class AuthService {
         Map<String, String> content = Map.of("name", user.getName(), "link", link);
         mailService.sendMail(user.getEmail(), "Hesap silme", "delete-account", content);
     }
+
+
+    public void createPasswordResetTokenForUser(User user) throws MessagingException, UnsupportedEncodingException {
+        PasswordResetToken resetToken = new PasswordResetToken();
+        resetToken.setToken(UUID.randomUUID().toString());
+        resetToken.setEmail(user.getEmail());
+
+        passwordTokenRepository.save(resetToken);
+        mailService.sendMail(user.getEmail(), "Şifre sıfırlama", "reset-password", Map.of("link", baseUrl + "/auth/reset-password?token=" + resetToken.getToken()));
+    }
+
+
+    /**
+     *
+     *
+     * @PostMapping("/resetPassword")
+     *     public ResponseEntity<SuccessMessage> resetPassword(HttpServletRequest request,
+     *                                                         @RequestParam("email") String userEmail) {
+     *         User user = userService.findByEmail(userEmail);
+     *
+     *         String token = UUID.randomUUID().toString();
+     *         userService.createPasswordResetTokenForUser(user, token);
+     *         mailSender.send(constructResetTokenEmail(getAppUrl(request),
+     *                 request.getLocale(), token, user));
+     *         return ResponseEntity.ok(new SuccessMessage("Şifre sıfırlama linki gönderildi", request.getServletPath()));
+     *     }
+     *
+     *     @PostMapping("/savePassword")
+     *     public ResponseEntity<SuccessMessage> savePassword(final Locale locale, PasswordDto passwordDto) {
+     *
+     *         String result = authService.validatePasswordResetToken(passwordDto.getToken());
+     *
+     *         if (result != null) {
+     *             return ResponseEntity.ok(new SuccessMessage(result, "/auth/savePassword"));
+     *         }
+     *
+     *         Optional user = userService.getUserByPasswordResetToken(passwordDto.getToken());
+     *         if (user.isPresent()) {
+     *             userService.changeUserPassword(user.get(), passwordDto.getNewPassword());
+     *             return new GenericResponse(messages.getMessage(
+     *                     "message.resetPasswordSuc", null, locale));
+     *         } else {
+     *             return new GenericResponse(messages.getMessage(
+     *                     "auth.message.invalid", null, locale));
+     *         }
+     *     }
+     *
+     *     private SimpleMailMessage constructResetTokenEmail(String contextPath, Locale locale, String token, User user) {
+     *         String url = contextPath + "/user/changePassword?token=" + token;
+     *         String message = messages.getMessage("message.resetPassword",
+     *                 null, locale);
+     *         return constructEmail("Reset Password", message + " \r\n" + url, user);
+     *
+     *     }
+     *
+     *
+     *     private SimpleMailMessage constructEmail(String subject, String body,
+     *                                              User user) {
+     *         mailService.sendMail(user.getEmail(), subject, body, );
+     *         SimpleMailMessage email = new SimpleMailMessage();
+     *         email.setSubject(subject);
+     *         email.setText(body);
+     *         email.setTo(user.getEmail());
+     *         email.setFrom(env.getProperty("support.email"));
+     *         return email;
+     *     }
+     */
 }
