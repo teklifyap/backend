@@ -3,6 +3,8 @@ package edu.eskisehir.teklifyap.domain.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class Employee {
     @EqualsAndHashCode.Include
     private Long id;
 
+    private LocalDate salaryStartDate;
     @EqualsAndHashCode.Include
     private String name;
 

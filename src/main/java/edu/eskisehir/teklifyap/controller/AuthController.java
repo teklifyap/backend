@@ -73,6 +73,6 @@ public class AuthController {
     @PostMapping("/reset-password")
     public ResponseEntity<Void> resetPassword(HttpServletRequest request, @RequestParam String email, @RequestParam String token, @RequestBody PasswordDto passwordDto) throws Exception {
         userService.resetPassword(email, token, passwordDto);
-        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("https://www.google.com")).build();
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("https://teklifyap.oguzhanercelik.dev")).build();
     }
 }
