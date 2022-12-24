@@ -5,12 +5,15 @@ import edu.eskisehir.teklifyap.core.SuccessMessage;
 import edu.eskisehir.teklifyap.domain.dto.*;
 import edu.eskisehir.teklifyap.domain.model.User;
 import edu.eskisehir.teklifyap.service.AuthorizationService;
+import edu.eskisehir.teklifyap.service.MailService;
 import edu.eskisehir.teklifyap.service.OfferService;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -19,10 +22,12 @@ public class OfferController {
 
     private final OfferService offerService;
     private final AuthorizationService authorizationService;
+    private final MailService mailService;
 
-    public OfferController(OfferService offerService, AuthorizationService authorizationService) {
+    public OfferController(OfferService offerService, AuthorizationService authorizationService, MailService mailService) {
         this.offerService = offerService;
         this.authorizationService = authorizationService;
+        this.mailService = mailService;
     }
 
     @GetMapping("/{id}")
@@ -90,10 +95,13 @@ public class OfferController {
     }
 
     @GetMapping("/export/{id}")
-    public ResponseEntity<byte[]> export(HttpServletRequest request, @PathVariable Long id) throws Exception {
+    public ResponseEntity<SuccessMessage> export(HttpServletRequest request, @PathVariable Long id) throws Exception {
+        User user = authorizationService.getUserFromHttpRequest(request);
+
         byte[] export = offerService.export(id);
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(export);
+        Path path = Paths.get("export.pdf");
+        Files.write(path, export);
+        mailService.sendMailWithAttachment(user.getEmail(), "Offer Export", path.toFile());
+        return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
     }
 }
