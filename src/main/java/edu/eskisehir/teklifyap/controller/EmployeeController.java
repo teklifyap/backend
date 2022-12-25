@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -57,6 +58,12 @@ public class EmployeeController {
         authorizationService.getUserFromHttpRequest(request);
         employeeService.updateEmployee(employeeDto, id);
         return ResponseEntity.ok(new SuccessMessage("done", request.getServletPath()));
+    }
+
+    @GetMapping("/get-salary/{id}")
+    public ResponseEntity<SuccessDataMessage<Double>> getEmployeeSalary(HttpServletRequest request, @PathVariable Long id) throws Exception {
+        authorizationService.getUserFromHttpRequest(request);
+        return ResponseEntity.ok(new SuccessDataMessage<>(employeeService.getEmployeeSalary(id), request.getServletPath()));
     }
 
 
