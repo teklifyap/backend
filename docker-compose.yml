@@ -6,12 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
-    environment:
-      - PASSWORD
-      - USERNAME
-      - URI
-      - SMTP_PASSWORD
-      - BASE_URL
+
     volumes:
       - storage_dev:/app/storage
     ports:
