@@ -26,14 +26,16 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     private final PasswordTokenRepository passwordTokenRepository;
+    private final PasswordEncoder encoder;
 
     public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder,
-                       TokenService tokenService, PasswordTokenRepository passwordTokenRepository) {
+                       TokenService tokenService, PasswordTokenRepository passwordTokenRepository, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.tokenService = tokenService;
         this.passwordTokenRepository = passwordTokenRepository;
+        this.encoder = encoder;
     }
 
     protected User findById(long id) throws Exception {
@@ -69,7 +71,7 @@ public class UserService implements UserDetailsService {
             if (body.getName() != null) user.setName(body.getName());
             if (body.getSurname() != null) user.setSurname(body.getSurname());
             if (body.getEmail() != null && Singleton.validateEmail(body.getEmail())) user.setEmail(body.getEmail());
-            if (body.getPassword() != null) user.setPassword(body.getPassword());
+            if (body.getPassword() != null) user.setPassword(encoder.bCryptPasswordEncoder().encode(body.getPassword()));
             if (body.getNewPassword() != null) user.setPassword(body.getNewPassword());
 
             save(user);
